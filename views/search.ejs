@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<% include ./head %>
+
+<script type="text/template" id="tpl_countryList">
+	{% rc.forEach(function(o){ %}
+	<div class="country" data-country_code="{%= o.country_code %}">
+		<a href="#">
+			<span class='flag-img'><img src='/img/flag/{%= o.country_code %}.png' title='{%= o.country_name %}'></span>
+			<span class="text">{%= o.country_name %}</span>
+		</a>
+	</div>
+	{% }); %}
+</script>
+
+<script type="text/template" id="tpl_card">
+	<div class="card">
+		<div class="row">
+			<div class="info">
+				<input type="hidden" name="code_id" value="{%= rc.id %}">
+				<div class="label">Trainer Name</div>
+				<div class="text">{%= rc.trainer_name %}</div>
+
+				<div class="label mt-10">Country</div>
+				<div class="text"><span class="flag-mini"><img src='/img/flag/{%= rc.country_code %}.png' title='{%= rc.country_name %}'></span> {%= rc.country_name %}</div>
+			</div>
+
+			<div class="image"><img src="{%= rc.user_image %}"></div>
+		</div>
+
+		<div class="row label  mt-10">Trainer Code</div>
+		<div id="trainer-code" class="row trainer-code">{%= rc.trainer_code %}</div>
+
+		<div class="row justify-content-center mt-20">
+			<button class="tt copy-btn primary-btn2 text-uppercase" data-clipboard-target="#trainer-code" data-toggle="tooltip">Copy this trainer code</button>
+		</div>
+
+		<div class="row comment justify-content-center mt-10">
+			<button class="primary-btn2 text-uppercase mr-15 like-btn">LIKE<span class="lnr lnr-thumbs-up"></span></button>
+			<button class="primary-btn2 text-uppercase dislike-btn">DISLIKE<span class="lnr lnr-thumbs-down"></span></button>
+		</div>
+
+		<div class="line"></div>
+
+		<div class="row controls">
+			<div class="col-4 like">
+				<a href="#"><span class="lnr lnr-thumbs-up"></span><span class="like-val">{%= rc.like %}</span></a>
+			</div>
+			<div class="another col-8" data-country_code="{%= rc.country_code %}">
+				<a href="#">Find another trainer <span class="lnr lnr-sync"></span></a>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/template" id="tpl_card-error">
+	<div class="card">
+		<h3>ERROR</h3>
+		<div class="line"></div>
+		<div>Trainer data does not exist in the country you selected. Please try other countries!</div>
+		<div class="line"></div>
+	</div>
+</script>
+
+<section class="continent section-gap-sm">
+	<div class="container">
+		<div id="card-wrapper" class="code-view justify-content-center mb-30">
+			<div class="col-md-8 header-text">
+				<div class="lnr-hover"><span class="lnr lnr-users"></span></div>
+				<h2>Find global friends</h2>
+				<p>
+					In which continent are you looking for friends?
+				</p>
+			</div>
+		</div>
+
+		<div class="line"></div>
+		<div id="map-continents">
+			<ul class="continents">
+				<li class="c1"><a href="#AF">Africa</a></li>
+				<li class="c2"><a href="#AS">Asia</a></li>
+				<li class="c3"><a href="#OC">Australia</a></li>
+				<li class="c4"><a href="#EU">Europe</a></li>
+				<li class="c5"><a href="#NA">North America</a></li>
+				<li class="c6"><a href="#SA">South America</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="row country-list justify-content-center" id="country-list">
+		<% if (typeof countries == 'object') { %>
+		<% countries.forEach(function(o) { %>
+		<div class="country" data-country_code="<%= o.country_code %>">
+			<a href="#">
+				<span class='flag-img'><img src='/img/flag/<%= o.country_code %>.png' title='<%= o.country_name %>'></span>
+				<span class="text"><%= o.country_name %></span>
+			</a>
+		</div>
+		<% }); %>
+		<% } %>
+	</div>
+</section>
+
+<% include ./foot %>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		var countryListEl = $("#country-list"),
+			cardEl= $("#card-wrapper"),
+			continentCode,
+			lastSelected;
+
+		var onclick = function(e) {
+			var rLink = e.children("A").eq(0).attr("href"),
+				rText = e.children("A").eq(0).text(),
+				rClass = e.attr("class").split(" ")[0];
+
+			continentCode = continentCodeMap[rText];
+			lastSelected = undefined;
+
+			$.ajax({
+				type: "POST",
+				url: "/code/search/continent",
+				data: {
+					continent: continentCode,
+					path: "/code/search/"
+				},
+				success: function (result) {
+					if (result.errorType == "login") {
+						alert('[ERROR] ' + result.errorMessage);
+						return window.location.href = result.siteConfig.loginUrl;
+					} else if (result.errorType) {
+						alert('[ERROR] ' + result.errorMessage);
+						return;
+					}
+
+					if (result.countries) {
+						var newHtml = _.template($('#tpl_countryList').html())(result.countries);
+						countryListEl.html(newHtml);
+					}
+				},
+				error: function (req, status, e) {
+					alert('[ERROR] ' + e);
+				}
+			});
+		};
+
+		var getCodeEvent = function(e) {
+			e.preventDefault();
+			var countryCode = $(e.currentTarget).data('country_code');
+			$.ajax({
+				type: "POST",
+				url: "/code/search/country",
+				data: {
+					continent: continentCode,
+					country_code: countryCode,
+					path: "/code/search/"
+				},
+				success: function (result) {
+					if (result.errorType == "login") {
+						alert('[ERROR] ' + result.errorMessage);
+						return window.location.href = result.siteConfig.loginUrl;
+					} else if (result.errorType == "register") {
+						alert(result.errorMessage);
+						return window.location.href = "/code/register";
+					} else if (result.errorType) {
+						alert('[ERROR] ' + result.errorMessage);
+						return;
+					}
+
+					if (result.code) {
+						cardEl.html(_.template($('#tpl_card').html())(result.code));
+					} else {
+						cardEl.html(_.template($('#tpl_card-error').html())());
+					}
+
+					// add event listener
+					new ClipboardJS('.copy-btn');
+					var copyBtnEl = $('.copy-btn');
+					copyBtnEl.tooltip({
+						trigger: 'manual',
+						placement: 'top'
+					});
+
+					$('.copy-btn').click(function(e) {
+						setTooltip(copyBtnEl, 'Copied!');
+						hideTooltip(copyBtnEl);
+					});
+
+					var likeBtnEl = $(".like-btn");
+					$('.like-btn').tooltip({
+						trigger: 'manual',
+						placement: 'bottom'
+					});
+
+					var dislikeBtnEl = $(".dislike-btn");
+					$('.dislike-btn').tooltip({
+						trigger: 'manual',
+						placement: 'bottom'
+					});
+
+					likeBtnEl.click(function(e) {
+						e.preventDefault();
+						var codeIdEl= $("input[name='code_id']");
+						$.ajax({
+							type: "POST",
+							url: "/code/like",
+							data: {
+								code_id: codeIdEl.val(),
+								path: "/code/search/"
+							},
+							success: function(result) {
+								if (result.errorType == "login") {
+									alert('[ERROR] ' + result.errorMessage);
+									return window.location.href = result.siteConfig.loginUrl;
+								} else if (result.errorType) {
+									setTooltip(likeBtnEl, result.errorMessage);
+									hideTooltip(likeBtnEl);
+									return;
+								}
+
+								setTooltip(likeBtnEl, 'Liked!');
+								hideTooltip(likeBtnEl);
+
+								// increase
+								var likeEl = $(".like-val");
+								likeEl.text(Number(likeEl.text()) + 1);
+							},
+							error: function(req, status, e) {
+								alert('[ERROR] ' + e);
+							}
+						});
+					});
+
+					dislikeBtnEl.click(function(e) {
+						e.preventDefault();
+						var codeIdEl= $("input[name='code_id']");
+						$.ajax({
+							type: "POST",
+							url: "/code/dislike",
+							data: {
+								code_id: codeIdEl.val(),
+								path: "/code/search/"
+							},
+							success: function(result) {
+								if (result.errorType == "login") {
+									alert('[ERROR] ' + result.errorMessage);
+									return window.location.href = result.siteConfig.loginUrl;
+								} else if (result.errorType) {
+									setTooltip(dislikeBtnEl, result.errorMessage);
+									hideTooltip(dislikeBtnEl);
+									return;
+								}
+
+								setTooltip(dislikeBtnEl, 'Disliked!');
+								hideTooltip(dislikeBtnEl);
+							},
+							error: function(req, status, e) {
+								alert('[ERROR] ' + e);
+							}
+						});
+					});
+
+					$(".another").click(getCodeEvent);
+					// event listener end
+
+				},
+				error: function (req, status, e) {
+					alert('[ERROR] ' + e);
+				}
+			});
+		};
+		var resetSelectedAndGetCodeEvent = function(e) {
+			if (lastSelected) {
+				lastSelected.removeClass('selected');
+			}
+
+			lastSelected = $(e.currentTarget).find('span.text');
+			lastSelected.addClass('selected');
+
+			getCodeEvent(e);
+		};
+
+		$('body').on('click', '.country', resetSelectedAndGetCodeEvent);
+
+		$("#map-continents").CSSMap({
+			"size": 850,
+			"tooltips": "visible",
+			"responsive": "auto",
+			"tapOnce": true,
+			"cities": true,
+			"onClick": onclick
+		});
+	});
+</script>
+
+</body>
+</html>

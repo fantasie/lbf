@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<meta name="author" content="LBF">
+		<meta name="description" content="Share PokemonGo Trainer Code to be friends">
+		<meta name="keywords" content="pokemongo trainer code share friend">
+		<meta charset="UTF-8">
+		<title><%= siteConfig.title %> - Pokemon Go Trainer Code Share</title>
+
+		<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+		<link rel="stylesheet" href="/css/linearicons.css">
+		<link rel="stylesheet" href="/css/owl.carousel.css">
+		<link rel="stylesheet" href="/css/font-awesome.min.css">
+		<link rel="stylesheet" href="/css/nice-select.css">
+		<link rel="stylesheet" href="/css/flags.css">
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<link rel="stylesheet" href="/css/bootstrap.css">
+		<link href="/css/easy-autocomplete.css" rel="stylesheet" type="text/css">
+		<link href='//fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,600,600italic&amp;subset=latin,cyrillic-ext,greek-ext,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="/css/cssmap/cssmap-continents.css" media="screen" />
+		<link rel="stylesheet" href="/css/main.css">
+	</head>
+	<body>
+	<header class="default-header">
+		<div class="header-decoration">
+			<div class=deco-0></div>
+			<div class=deco-1></div>
+			<div class=deco-0></div>
+			<div class=deco-1></div>
+			<div class=deco-0></div>
+			<div class=deco-1></div>
+			<div class=deco-0></div>
+			<div class=deco-1></div>
+			<div class=deco-0></div>
+			<div class=deco-1></div>
+		</div>
+		<div class="container">
+			<div class="header-wrap">
+				<div class="header-top d-flex justify-content-between align-items-center">
+					<div class="logo">
+						<a href="/home"><img class="logo-ball" src="/img/ball.png"><span><%= siteConfig.upperTitle %> </span></a>
+					</div>
+					<div class="main-menubar d-flex align-items-center">
+						<nav class="hide">
+							<a href="/home">Home</a>
+							<% if (typeof user == 'object' && user) { %>
+							<a href="/account/logout">Logout</a>
+							<% } else { %>
+							<a href="/account/login">Login</a>
+							<% } %>
+							<a href="/code/search">Look Up</a>
+							<a href="/about">About</a>
+						</nav>
+
+						<% if (typeof user == 'object' && user) { %>
+						<div class="logged" data-info="<%= user.email %>">
+							<% if (user.image) { %>
+							<div class="circle-img"><a href="/code/my"><img src="<%= user.image %>"></a></div>
+							<% } else { %>
+							<div class="user-icon"><a href="#"><span class="lnr lnr-user"></span></a></div>
+							<% } %>
+						</div>
+						<% } %>
+						<div class="menu-bar"><span class="lnr lnr-menu"></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>

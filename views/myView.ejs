@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<% include ./head %>
+
+<section class="code-view section-gap-sm">
+	<div class="container">
+		<div class="row d-flex justify-content-center session-title">
+			<div class="col-md-8 header-text">
+				<div class="lnr-hover"><span class="lnr lnr-user"></span></div>
+				<h2>My Trainer Codes</h2>
+			</div>
+		</div>
+
+		<div class="row pb-20"></div>
+
+		<% if (typeof errorType != 'undefined' && errorType) { %>
+		<div class="card">
+			<h3>ERROR</h3>
+			<div><%= errorMessage %></div>
+			<div class="line"></div>
+		</div>
+		<% } else if (codes.length == 0) { %>
+		<div class="card">
+			<h3>WARN</h3>
+			<div>You didn't share your code yet. Please register your trainer code.</div>
+			<div class="line"></div>
+			<div class="row controls justify-content-center">
+				<a href="/code/register"><button class="primary-btn2 text-uppercase">Share trainer code<span class="lnr lnr-arrow-right"></span></button></a>
+			</div>
+		</div>
+		<% } else { %>
+		<% codes.forEach(function(code) { %>
+			<div class="card" id="card-<%= code.id %>">
+				<div class="row">
+					<div class="info">
+						<div class="label">Trainer Name</div>
+						<div class="text"><%= code.trainer_name %></div>
+
+						<div class="label mt-10">Country</div>
+						<div class="text"><%= code.country_name %></div>
+					</div>
+
+					<div class="image">
+						<img src="<%= code.user_image %>">
+					</div>
+				</div>
+
+				<div class="row label  mt-10">Trainer Code</div>
+				<div id="trainer-code" class="row trainer-code"><%= code.trainer_code %></div>
+
+				<div class="line"></div>
+
+				<div class="row controls">
+					<div class="col-6 like">
+						<a href="#"><span class="lnr lnr-thumbs-up"></span><span class="like-val"><%= code.like %></span></a>
+						<span class="pr-1"></span>
+						<a href="#"><span class="lnr lnr-thumbs-down"></span><span class="dislike-val"><%= code.dislike %></span></a>
+					</div>
+					<div class="another col-6">
+						<a href="#" class="delete-btn" data-code_id="<%= code.id %>" data-country_code="<%= code.country_code %>"><span class="lnr lnr-cog"></span> DELETE</a>
+					</div>
+				</div>
+			</div>
+			<div class="row pb-20"></div>
+			<% }); %>
+		<% } %>
+	</div>
+</section>
+
+<% include ./foot %>
+<script>
+	var deleteBtnEl = $(".delete-btn");
+	deleteBtnEl.click(function(e) {
+		e.preventDefault();
+
+		var result = confirm("Do you really want to delete?");
+		if (!result) {
+			return;
+		}
+
+		var codeId = $(e.currentTarget).data("code_id"),
+			countryCode = $(e.currentTarget).data("country_code");
+
+		$.ajax({
+			type: "POST",
+			url: "/code/delete",
+			data: {
+				path: "/code/my",
+				code_id: codeId,
+				country_code: countryCode
+			},
+			success: function(result) {
+				if (result.errorType == "login") {
+					alert('[ERROR] ' + result.errorMessage);
+					return window.location.href = result.siteConfig.loginUrl;
+				} else if (result.errorType) {
+					alert('[ERROR] ' + result.errorMessage);
+					return;
+				};
+
+				var cardEl = $("#" + "card-" + codeId,);
+				cardEl.remove();
+			},
+			error: function(req, status, e) {
+				alert('[ERROR] ' + e);
+			}
+		});
+	});
+</script>
+
+</body>
+</html>

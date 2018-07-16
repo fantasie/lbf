@@ -1,0 +1,11 @@
+node_modules
+.DS_Store
+
+# IntelliJ project files
+*.iml
+*.iws
+*.ipr
+.idea/
+
+config/config.js
+config/dbConfig.js

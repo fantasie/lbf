@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<% include ./head %>
+
+		<section class="register section-gap-sm">
+			<div class="container">
+				<div class="row d-flex justify-content-center session-title">
+					<div class="col-md-8 header-text">
+						<div class="lnr-hover"><span class="lnr lnr-pencil"></span></div>
+						<h2>Share Your Code</h2>
+						<p>
+							Share your trainer code<br>
+							so other trainers can register you as a friend.
+						</p>
+					</div>
+				</div>
+				<form id="form" name="register-form">
+				<div class="row justify-content-center">
+					<div class="input col-md-8">
+						<h4>Search your country</h4>
+						<input id="countries" name="country" class="single-in form-control" placeholder="Search countries" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search countries'" required="true"/>
+					</div>
+					<!--<div class="input col-md-8">-->
+						<!--<h4>Upload screenshot showing your trainer code</h4>-->
+						<!--<input type="file" name="image" class="single-in form-control" required="true">-->
+					<!--</div>-->
+					<div class="input col-md-8">
+						<h4>Your trainer name</h4>
+						<input type="text" name="trainer_name" class="single-in form-control" placeholder="Trainer Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Trainer Name'" required="true">
+					</div>
+					<div class="input col-md-8">
+						<h4>Your trainer code</h4>
+						<input type="text" name="trainer_code" class="single-in form-control" placeholder="0000 0000 0000" maxlength=14 onfocus="this.placeholder = ''" onblur="this.placeholder = '0000 0000 0000'" required="true">
+					</div>
+					<div class="col-lg-12 d-flex justify-content-center">
+						<button class="primary-btn mt-50 text-uppercase">OKAY<span class="lnr lnr-arrow-right"></span></button>
+					</div>
+				</div>
+				</form>
+			</div>
+		</section>
+
+		<% include ./foot %>
+
+		<script>
+			var options = {
+				url: "./../resources/countries.json",
+				getValue: "name",
+				minCharNumber: 0,
+				adjustWidth: false,
+				list: {
+					match: {
+						enabled: true
+					},
+					maxNumberOfElements: 10,
+					hideOnEmptyPhrase: true
+				},
+				template: {
+					type: "custom",
+					method: function(value, item) {
+						return "<span class='flag flag-" + (item.code).toLowerCase() + "' ></span>" + value;
+					}
+				}
+			};
+
+			var countryEl = $("#countries");
+			countryEl.easyAutocomplete(options);
+
+			var $form = $( "#form" );
+			var trainerCodeEl = $form.find("input[name='trainer_code']");
+			trainerCodeEl.on("keyup", function(event) {
+				return formatizeCode(trainerCodeEl);
+			});
+
+			function formatizeCode(el) {
+				var code = el.val().replace(/[^\d]/g, '').substr(0, 12);
+				var split = 4;
+				var chunk = [];
+
+				for (var i = 0, len = code.length; i < len; i += split) {
+					split = 4;
+					chunk.push(code.substr( i, split ) );
+
+					if (i >= 12) {
+						break;
+					}
+				}
+
+				el.val(chunk.join(" "));
+			};
+
+			var trainerNameEl = $form.find("input[name='trainer_name']");
+			trainerNameEl.on("keyup", function(event) {
+				formatizeTrainerName(trainerNameEl);
+			});
+
+			function formatizeTrainerName(el) {
+				var trainerName = el.val().replace(/[^a-zA-Z0-9]/g, '');
+				el.val(trainerName);
+			}
+
+			$(".primary-btn").click(function(e) {
+				e.preventDefault();
+				$.ajax({
+					type: "POST",
+					url: "/code/register",
+					data: {
+						country: countryEl.val(),
+						trainer_name: trainerNameEl.val(),
+						trainer_code: trainerCodeEl.val()
+					},
+					success: function(result) {
+						if (result.errorType == "login") {
+							alert('[ERROR] ' + result.errorMessage);
+							return window.location.href = result.siteConfig.loginUrl;
+						} else if (result.errorType) {
+							return alert('[ERROR] ' + result.errorMessage);
+						}
+
+						if (result.codeId) {
+							alert('Success!');
+							return window.location.href = '/code/view/' + result.codeId;
+						}
+
+						alert('[ERROR] ' + "Uknown error occured.");
+					},
+					error: function(req, status, e) {
+						alert('[ERROR] ' + e);
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

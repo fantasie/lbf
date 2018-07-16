@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<% include ./head %>
+
+<section class="banner-area relative" id="home">
+	<div class="overlay overlay-bg"></div>
+	<div class="container">
+		<div class="row fullscreen align-items-center justify-content-center" style="height: 915px;">
+			<div class="active-banner-carousel">
+				<div class="banner-content col-lg-12 col-md-12">
+					<h1>
+						Be friends with Trainers<br>
+						from around the world.
+					</h1>
+					<a href="/code/register" class="head-btn btn text-uppercase">Share your code</a>
+				</div>
+				<div class="banner-content col-lg-12 col-md-12">
+					<h1>
+						Collect Alola Pokemon
+						<br>from all over the world.
+					</h1>
+					<a href="/code/register" class="head-btn btn text-uppercase">Share your code</a>
+				</div>
+			</div>
+			<div class="carousel-trigger">
+				<div class="next-trigger"><span class="lnr lnr-arrow-up"></span></span></div>
+				<div class="prev-trigger"><span class="lnr lnr-arrow-down"></span></span></div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="continent section-gap-sm">
+	<div class="container">
+		<div class="row d-flex justify-content-center section-title">
+			<div class="col-md-8 header-text">
+				<div class="lnr-hover"><span class="lnr lnr-users"></span></div>
+				<h2>Find global friends</h2>
+				<p>
+					In which continent are you looking for friends?
+				</p>
+			</div>
+		</div>
+		<div id="map-continents">
+			<ul class="continents">
+				<li class="c1"><a href="/code/search?continent=AF">Africa</a></li>
+				<li class="c2"><a href="/code/search?continent=AS">Asia</a></li>
+				<li class="c3"><a href="/code/search?continent=OC">Australia</a></li>
+				<li class="c4"><a href="/code/search?continent=EU">Europe</a></li>
+				<li class="c5"><a href="/code/search?continent=NA">North America</a></li>
+				<li class="c6"><a href="/code/search?continent=SA">South America</a></li>
+			</ul>
+		</div>
+
+		<div class="col-lg-12 d-flex justify-content-center">
+			<a href="/code/search"><button class="primary-btn mt-30 text-uppercase">More Countries<span class="lnr lnr-arrow-right"></span></button></a>
+		</div>
+	</div>
+</section>
+
+<% include ./foot %>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		var onclick = function(e) {
+			var rLink = e.children("A").eq(0).attr("href"),
+				rText = e.children("A").eq(0).text(),
+				rClass = e.attr("class").split(" ")[0],
+				continentCode = continentCodeMap[rText];
+		};
+
+		$("#map-continents").CSSMap({
+			"size": 850,
+			"tooltips": "visible",
+			"responsive": "auto",
+			"tapOnce": true,
+			"cities": true
+		});
+	});
+</script>
+
+</body>
+</html>
