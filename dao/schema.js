@@ -37,7 +37,7 @@ var Schema = {
 		country_code: { type: 'string', maxlength: 10, nullable: false, unique: true },
 		country_name: { type: 'string', maxlength: 150, nullable: false},
 		count: { type: 'integer', nullable: false, defaultTo: 0 },
-
+		updated_at: { type: 'dateTime', nullable: false },
 	},
 	action: {
 		id: { type: 'increments', nullable: false, primary: true },
