@@ -15,14 +15,15 @@
 		<div class="card">
 			<% if (typeof errorType != 'undefined' && errorType) { %>
 			<h3>ERROR</h3>
+			<div class="line"></div>
 			<div><%= errorMessage %></div>
 			<div class="line"></div>
 
-			<div class="row controls">
-				<div class="another col-12">
-					<a href="/code/search">Look another countries <span class="lnr lnr-location"></span></a>
-				</div>
-			</div>
+			<!--<div class="row controls">-->
+				<!--<div class="another col-12">-->
+					<!--<a href="/code/search">Look another countries <span class="lnr lnr-location"></span></a>-->
+				<!--</div>-->
+			<!--</div>-->
 			<% } else { %>
 			<div class="row">
 				<div class="info">
@@ -108,7 +109,7 @@
 			},
 			success: function(result) {
 				if (result.errorType == "login") {
-					alert('[ERROR] ' + result.errorMessage);
+					alert(result.errorMessage);
 					return window.location.href = result.siteConfig.loginUrl;
 				} else if (result.errorType) {
 					setTooltip(likeBtnEl, result.errorMessage);
@@ -140,7 +141,7 @@
 			},
 			success: function(result) {
 				if (result.errorType == "login") {
-					alert('[ERROR] ' + result.errorMessage);
+					alert(result.errorMessage);
 					return window.location.href = result.siteConfig.loginUrl;
 				} else if (result.errorType) {
 					setTooltip(dislikeBtnEl, result.errorMessage);

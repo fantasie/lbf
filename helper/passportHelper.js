@@ -13,8 +13,8 @@ module.exports = function(passport) {
     });
 
     passport.use(new GoogleStrategy({
-            clientID: config.google.clientId,
-            clientSecret: config.google.clientSecret,
+        clientID: config.google.clientId,
+        clientSecret: config.google.clientSecret,
 	    callbackURL: config.google.callbackUrl
         }, function(accessToken, refreshToken, profile, done) {
         process.nextTick(function() {

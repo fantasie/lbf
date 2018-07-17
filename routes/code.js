@@ -14,6 +14,16 @@ var logger = require('log4js').getLogger('routes/code.js');
 
 router.get('/register', responseHelper.checkLoginWithRedirect, function(req, res) {
 	var result = responseHelper.getDefaultResult(req);
+
+	var country = "";
+	if (req.user.country_code) {
+		var countryObj = commonUtil.getCountry(req.user.country_code);
+		if (countryObj) {
+			country = countryObj.countryName;
+		}
+	}
+
+	result.country = country;
 	res.render('register', result);
 });
 
@@ -23,10 +33,14 @@ router.post('/register', responseHelper.checkLoginWithResult, function(req, res)
 		trainerName = req.body.trainer_name && req.body.trainer_name.trim(),
 		countryName = req.body.country;
 
-	if (!trainerCode || !/^\d{12}$/.test(trainerCode)) {
+	var countryCode = countryName && commonUtil.getCountryCode(countryName),
+		continent = countryCode && commonUtil.getCountry(countryCode).continent;
+	if (!countryName || !countryCode || !continent) {
+		logger.warn("failed to parse country: " + countryName + ", " + countryCode + ", " + continent);
+
 		result.errorType = "input";
-		result.errorElement = "code";
-		result.errorMessage = "Entered code is invalid.";
+		result.errorElement = "country";
+		result.errorMessage = "Entered country is invalid.";
 		return res.json(result);
 	}
 
@@ -37,14 +51,10 @@ router.post('/register', responseHelper.checkLoginWithResult, function(req, res)
 		return res.json(result);
 	}
 
-	var countryCode = countryName && commonUtil.getCountryCode(countryName),
-		continent = countryCode && commonUtil.getCountry(countryCode).continent;
-	if (!countryName || !countryCode || !continent) {
-		logger.warn("failed to parse country: " + countryName + ", " + countryCode + ", " + continent);
-
+	if (!trainerCode || !/^\d{12}$/.test(trainerCode)) {
 		result.errorType = "input";
-		result.errorElement = "country";
-		result.errorMessage = "Entered country is invalid.";
+		result.errorElement = "trainer_code";
+		result.errorMessage = "Entered trainer code is invalid.";
 		return res.json(result);
 	}
 
@@ -91,7 +101,10 @@ router.get('/view', responseHelper.checkLoginWithRedirect, function(req, res){
 		},
 		function(data, callback) {
 			if (!data) {
-				return callback("data not exists. ");
+				var result = responseHelper.getDefaultResult(req);
+				result.errorType = "empty";
+				result.errorMessage = "Trainer data does not exist in the country you selected. Please try other countries!.";
+				return res.render('view', result);
 			}
 
 			bookshelfService.adjustCode(data.id, 'view', 1, function() {
@@ -357,7 +370,7 @@ router.post('/search/country', responseHelper.checkLoginWithResult, function(req
 		},
 		function(data, callback) {
 			if (!data) {
-				logger.warn("failed to select random code: userId: " + req.user.user_id + ", country: " + req.body.country_code);
+				// logger.warn("failed to select random code: userId: " + req.user.user_id + ", country: " + req.body.country_code);
 				return callback(null, null);
 			}
 
@@ -415,6 +428,7 @@ router.post('/search/continent', function(req, res){
 		if (!data) {
 			data = [];
 		}
+		data.unshift({ country_code: "ALL", country_name: "ALL" });
 
 		result.countries = data;
 		return res.json(result);
@@ -432,6 +446,10 @@ router.get('/search', function(req, res){
 				return res.render('search', result);
 			}
 
+			if (!data) {
+				data = [];
+			}
+			data.unshift({ country_code: "ALL", country_name: "ALL" });
 			result.countries = data;
 			return res.render('search', result);
 		});

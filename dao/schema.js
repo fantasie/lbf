@@ -3,6 +3,7 @@ var Schema = {
 		id: { type: 'increments', nullable: false, primary: true },
 		user_id: { type: 'string', maxlength: 150, nullable: false, unique: true },
 		name: { type: 'string', maxlength: 150, nullable: false, defaultTo: 'user' },
+		country_code: { type: 'string', maxlength: 10, nullable: true },
 		email: { type: 'string', maxlength: 254, nullable: false, unique: true },
 		password: { type: 'string', nullable: false },
 		salt: { type: 'string', nullable: false },

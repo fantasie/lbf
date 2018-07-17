@@ -1,8 +1,6 @@
 module.exports = {
 	site: {
-		siteUrl: "http://pokemongo-friends.soylab.net",
 		title : "Let's be friends!",
-		upperTitle : "LET'S BE FRIENDS!",
 		loginUrl: "/account/login"
 	},
 	action: {

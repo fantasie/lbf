@@ -20,6 +20,7 @@
 		<% } else if (codes.length == 0) { %>
 		<div class="card">
 			<h3>WARN</h3>
+			<div class="line"></div>
 			<div>You didn't share your code yet. Please register your trainer code.</div>
 			<div class="line"></div>
 			<div class="row controls justify-content-center">
@@ -89,7 +90,7 @@
 			},
 			success: function(result) {
 				if (result.errorType == "login") {
-					alert('[ERROR] ' + result.errorMessage);
+					alert(result.errorMessage);
 					return window.location.href = result.siteConfig.loginUrl;
 				} else if (result.errorType) {
 					alert('[ERROR] ' + result.errorMessage);

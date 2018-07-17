@@ -6,7 +6,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 9;
+  z-index: 99;
   background-color:#fff;
   padding:20px 0;
   width: 100% !important;
@@ -18,7 +18,7 @@ body {
   top: 0px;
   position: fixed;
   width: 100%;
-  z-index: 9999; }
+  z-index: 999; }
 .header-decoration div {
   height: 5px;
   width: 10%;
@@ -54,6 +54,7 @@ body {
     font-weight: 600;
     color: #222222;
     font-size: 16px;
+  	text-transform: uppercase;
 }
 
 nav {
@@ -66,7 +67,7 @@ nav {
 		width: 110px;
 		text-align: right;
 		padding: 20px 0;
-		z-index: 5;
+		z-index: 95;
 		background: $white;
 		a{
 			color:$primary-color!important;

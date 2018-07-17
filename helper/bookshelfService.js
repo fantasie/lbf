@@ -20,6 +20,23 @@ exports.getUser = function(userId, callback) {
 		});
 };
 
+exports.fillUserConfig = function(userId, name, countryCode, callback) {
+	models.models.User
+		.where({ user_id: userId })
+		.save({ name: name, country_code: countryCode },{patch:true})
+		.then(function (user) {
+			if (!user) {
+				return callback(null, null);
+			}
+
+			callback(null, user.toJSON());
+		})
+		.catch(function (err) {
+			logger.error(err);
+			return callback(err, null);
+		});
+};
+
 exports.insertUser = function(profile, callback) {
 	var userId = profile.id + '@googleplus',
 		image = profile.photos[0] && profile.photos[0].value,

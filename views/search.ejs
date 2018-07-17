@@ -156,7 +156,7 @@
 				},
 				success: function (result) {
 					if (result.errorType == "login") {
-						alert('[ERROR] ' + result.errorMessage);
+						alert(result.errorMessage);
 						return window.location.href = result.siteConfig.loginUrl;
 					} else if (result.errorType == "register") {
 						alert(result.errorMessage);
@@ -209,7 +209,7 @@
 							},
 							success: function(result) {
 								if (result.errorType == "login") {
-									alert('[ERROR] ' + result.errorMessage);
+									alert(result.errorMessage);
 									return window.location.href = result.siteConfig.loginUrl;
 								} else if (result.errorType) {
 									setTooltip(likeBtnEl, result.errorMessage);
@@ -242,7 +242,7 @@
 							},
 							success: function(result) {
 								if (result.errorType == "login") {
-									alert('[ERROR] ' + result.errorMessage);
+									alert(result.errorMessage);
 									return window.location.href = result.siteConfig.loginUrl;
 								} else if (result.errorType) {
 									setTooltip(dislikeBtnEl, result.errorMessage);

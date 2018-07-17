@@ -25,7 +25,7 @@ exports.getRandomCode = function(data, callback) {
 		}
 
 		var where = "where user_id != '" + data.userId + "'";
-		if (data.countryCode) {
+		if (data.countryCode && data.countryCode != "ALL") {
 			where = where + " and country_code = '" + data.countryCode + "'"
 		}
 		var sql = 'select * from code ' + where + ' order by rand() limit 1';

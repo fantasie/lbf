@@ -16,7 +16,8 @@
 				<div class="row justify-content-center">
 					<div class="input col-md-8">
 						<h4>Search your country</h4>
-						<input id="countries" name="country" class="single-in form-control" placeholder="Search countries" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search countries'" required="true"/>
+						<input id="countries" name="country" class="single-in form-control" placeholder="Search countries" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search countries'" required="true" value="<%= country %>%>"/>
+						<div class="feedback feedback-country"></div>
 					</div>
 					<!--<div class="input col-md-8">-->
 						<!--<h4>Upload screenshot showing your trainer code</h4>-->
@@ -25,10 +26,12 @@
 					<div class="input col-md-8">
 						<h4>Your trainer name</h4>
 						<input type="text" name="trainer_name" class="single-in form-control" placeholder="Trainer Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Trainer Name'" required="true">
+						<div class="feedback feedback-trainer_name"></div>
 					</div>
 					<div class="input col-md-8">
 						<h4>Your trainer code</h4>
 						<input type="text" name="trainer_code" class="single-in form-control" placeholder="0000 0000 0000" maxlength=14 onfocus="this.placeholder = ''" onblur="this.placeholder = '0000 0000 0000'" required="true">
+						<div class="feedback feedback-trainer_code"></div>
 					</div>
 					<div class="col-lg-12 d-flex justify-content-center">
 						<button class="primary-btn mt-50 text-uppercase">OKAY<span class="lnr lnr-arrow-right"></span></button>
@@ -64,6 +67,10 @@
 			var countryEl = $("#countries");
 			countryEl.easyAutocomplete(options);
 
+			$('#eac-container-countries').find('ul').click(function(e) {
+				feedbackEls.country.hide();
+			});
+
 			var $form = $( "#form" );
 			var trainerCodeEl = $form.find("input[name='trainer_code']");
 			trainerCodeEl.on("keyup", function(event) {
@@ -87,6 +94,10 @@
 				el.val(chunk.join(" "));
 			};
 
+			trainerCodeEl.on("focusout", function(event){
+				validateTrainerCode();
+			});
+
 			var trainerNameEl = $form.find("input[name='trainer_name']");
 			trainerNameEl.on("keyup", function(event) {
 				formatizeTrainerName(trainerNameEl);
@@ -97,8 +108,61 @@
 				el.val(trainerName);
 			}
 
+			trainerNameEl.on("focusout", function(event){
+				validateTrainerName();
+			});
+
+			var feedbackEls = {};
+			feedbackEls.trainer_name = $form.find('.feedback-trainer_name');
+			feedbackEls.trainer_code = $form.find('.feedback-trainer_code');
+			feedbackEls.country = $form.find('.feedback-country');
+
+			function validateTrainerCode() {
+				feedbackEls.trainer_code.hide();
+				if (!trainerCodeEl.val() || trainerCodeEl.val().length != 14) {
+					feedbackEls.trainer_code.html("Trainer code is invalid.");
+					feedbackEls.trainer_code.show();
+					return false;
+				}
+				return true;
+			};
+
+			function validateTrainerName() {
+				feedbackEls.trainer_name.hide();
+				if (!trainerNameEl.val() || trainerNameEl.val().length < 3 || trainerNameEl.val().length > 20) {
+					feedbackEls.trainer_name.html("Trainer name is invalid.");
+					feedbackEls.trainer_name.show();
+					return false;
+				}
+				return true;
+			};
+
+			function validateCountry() {
+				feedbackEls.country.hide();
+				if (!countryEl.val()) {
+					feedbackEls.country.html("Input the country name and select into the list");
+					feedbackEls.country.show();
+					return false;
+				}
+				return true;
+			};
+
+			function validateForm() {
+				var validateCountryResult = validateCountry(),
+					validateTrainerCodeResult = validateTrainerCode(),
+					validateTrainerNameResult = validateTrainerName();
+
+				return (validateCountryResult && validateTrainerCodeResult && validateTrainerNameResult);
+			};
+
 			$(".primary-btn").click(function(e) {
 				e.preventDefault();
+
+				var isValid = validateForm();
+				if (!isValid) {
+					return;
+				}
+
 				$.ajax({
 					type: "POST",
 					url: "/code/register",
@@ -109,8 +173,12 @@
 					},
 					success: function(result) {
 						if (result.errorType == "login") {
-							alert('[ERROR] ' + result.errorMessage);
+							alert(result.errorMessage);
 							return window.location.href = result.siteConfig.loginUrl;
+						} else if (result.errorType == "input" && result.errorElement) {
+							feedbackEls[result.errorElement].html(result.errorMessage);
+							feedbackEls[result.errorElement].show();
+							return;
 						} else if (result.errorType) {
 							return alert('[ERROR] ' + result.errorMessage);
 						}
