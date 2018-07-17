@@ -1,4 +1,4 @@
-var bcrypt = require('bcrypt'),
+var bcrypt = require('bcryptjs'),
 	models = require('./../dao/models'),
 	serviceConfig = require('./../config/serviceConfig');
 
@@ -117,7 +117,7 @@ exports.getCode = function(id, callback) {
 };
 
 exports.deleteMyCode = function(userId, id, callback) {
-	models.models.Code.forge({ id: id, user_id: userId })
+	models.models.Code.where({ id: id, user_id: userId })
 		.destroy()
 		.then(function(result) {
 			return callback(null, result);
@@ -129,7 +129,7 @@ exports.deleteMyCode = function(userId, id, callback) {
 };
 
 exports.getCodes = function(userId, callback) {
-	models.models.Code.forge({ user_id: userId })
+	models.models.Code.where({ user_id: userId })
 		.fetchAll()
 		.then(function (codes) {
 			if (!codes) {

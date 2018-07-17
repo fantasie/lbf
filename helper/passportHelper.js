@@ -15,7 +15,7 @@ module.exports = function(passport) {
     passport.use(new GoogleStrategy({
             clientID: config.google.clientId,
             clientSecret: config.google.clientSecret,
-            callbackURL: 'http://localhost:3000/account/login/callback'
+	    callbackURL: config.google.callbackUrl
         }, function(accessToken, refreshToken, profile, done) {
         process.nextTick(function() {
             var userId = profile.id + '@googleplus';
@@ -28,7 +28,6 @@ module.exports = function(passport) {
                     return done(null, user);
                 }
 
-                logger.info(JSON.stringify(profile));
                 return bookshelfService.insertUser(profile, done);
             });
         });
