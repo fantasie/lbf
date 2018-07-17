@@ -28,6 +28,10 @@ exports.getRandomCode = function(data, callback) {
 		if (data.countryCode && data.countryCode != "ALL") {
 			where = where + " and country_code = '" + data.countryCode + "'"
 		}
+
+		if (data.continent) {
+			where = where + " and continent = '" + data.continent + "'"
+		}
 		var sql = 'select * from code ' + where + ' order by rand() limit 1';
 		logger.info(sql);
 		connection.query(sql, function (err, result) {

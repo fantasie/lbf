@@ -97,6 +97,7 @@
 		<% }); %>
 		<% } %>
 	</div>
+	<input id="continent-holder" type="hidden" value="<%= continent%>">
 </section>
 
 <% include ./foot %>
@@ -105,7 +106,7 @@
 	$(document).ready(function(){
 		var countryListEl = $("#country-list"),
 			cardEl= $("#card-wrapper"),
-			continentCode,
+			continentCode = $("#continent-holder").val(),
 			lastSelected;
 
 		var onclick = function(e) {
@@ -289,6 +290,21 @@
 			"cities": true,
 			"onClick": onclick
 		});
+
+		if (continentCode) {
+			var classMap = {
+				AF: "c1",
+				AS: "c2",
+				OC: "c3",
+				EU: "c4",
+				NA: "c5",
+				SA: "c6"
+			},
+			className = classMap[continentCode];
+
+			$("#map-continents").find('li.' + className).addClass('active-region');
+		};
+
 	});
 </script>
 

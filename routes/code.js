@@ -365,7 +365,8 @@ router.post('/search/country', responseHelper.checkLoginWithResult, function(req
 		function(data, callback) {
 			mysqlService.getRandomCode({
 				userId: userId,
-				countryCode: req.body.country_code
+				countryCode: req.body.country_code,
+				continent: req.body.continent
 			}, callback);
 		},
 		function(data, callback) {
@@ -438,8 +439,9 @@ router.post('/search/continent', function(req, res){
 router.get('/search', function(req, res){
 	var result = responseHelper.getDefaultResult(req);
 
-	if (req.query.continent) {
-		mysqlService.getCountriesByContinent(req.query.continent, function(err, data) {
+	var continent = req.query.continent;
+	if (continent) {
+		mysqlService.getCountriesByContinent(continent, function(err, data) {
 			if (err) {
 				result.errorType = "request";
 				result.errorMessage = "Invalid request parameter.";
@@ -451,9 +453,11 @@ router.get('/search', function(req, res){
 			}
 			data.unshift({ country_code: "ALL", country_name: "ALL" });
 			result.countries = data;
+			result.continent = continent;
 			return res.render('search', result);
 		});
 	} else {
+		result.continent = "";
 		return res.render('search', result);
 	}
 });
