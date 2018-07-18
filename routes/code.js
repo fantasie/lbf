@@ -653,8 +653,6 @@ router.get('/search', function(req, res){
 			}
 
 			result.continentCounts = data;
-
-			logger.info(result.continentCounts);
 			return res.render('search', result);
 		});
 	} else {
@@ -678,9 +676,6 @@ router.get('/search', function(req, res){
 			result.countries = data;
 			result.continent = continent;
 			result.continentCounts = results.continentCounts;
-
-			logger.info(result.continentCounts);
-
 			return res.render('search', result);
 		});
 	}

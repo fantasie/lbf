@@ -1857,65 +1857,74 @@ a, a:hover {
   width: 100%;
   margin: 10px 0; }
 
+.my-code-view {
+  padding-right: 10px;
+  padding-left: 10px; }
+  .my-code-view h2 {
+    padding-bottom: 10px; }
+  .my-code-view .header-text {
+    text-align: center; }
+  .my-code-view .card {
+    margin-bottom: 20px; }
+
 .code-view {
   padding-right: 10px;
-  padding-left: 10px;
-  padding-bottom: 20px; }
+  padding-left: 10px; }
   .code-view h2 {
     padding-bottom: 10px; }
   .code-view .header-text {
     text-align: center; }
-  .code-view .card {
+
+.card {
+  margin: auto;
+  border-radius: 5px;
+  border: 3px solid #fbcdd2;
+  padding: 20px;
+  width: 100%; }
+  @media (min-width: 460px) {
+    .card {
+      width: 400px; } }
+  .card .row {
+    padding-left: 15px;
+    padding-right: 15px; }
+  .card .info {
+    width: 70%; }
+    .card .info .flag-mini {
+      width: 30px;
+      margin: auto; }
+      .card .info .flag-mini img {
+        width: 30px; }
+  .card .image {
+    text-align: right;
     margin: auto;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    border: 3px solid #fbcdd2;
-    padding: 20px;
-    width: 100%; }
-    @media (min-width: 460px) {
-      .code-view .card {
-        width: 400px; } }
-    .code-view .card .row {
-      padding-left: 15px;
-      padding-right: 15px; }
-    .code-view .card .info {
-      width: 70%; }
-      .code-view .card .info .flag-mini {
-        width: 30px;
-        margin: auto; }
-        .code-view .card .info .flag-mini img {
-          width: 30px; }
-    .code-view .card .image {
-      text-align: right;
-      margin: auto;
-      width: 80px; }
-      .code-view .card .image img {
-        width: 80px;
-        height: 80px; }
-    .code-view .card .label {
-      font-size: .8em; }
-    .code-view .card .text {
-      font-weight: 400;
-      color: #27AE60; }
-    .code-view .card .trainer-code {
-      font-size: 1.8em;
-      font-weight: 400;
-      letter-spacing: 2px;
-      color: #27AE60; }
-    .code-view .card .comment .primary-btn2 {
-      padding-left: 25px;
-      padding-right: 20px; }
-    .code-view .card .comment {
-      color: #555555; }
-    .code-view .card .controls .like .lnr {
-      margin-right: 3px;
+    width: 80px; }
+    .card .image img {
+      width: 80px;
+      height: 80px; }
+  .card .label {
+    font-size: .8em; }
+  .card .text {
+    font-weight: 400;
+    color: #27AE60; }
+  .card .trainer-code {
+    font-size: 1.8em;
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: #27AE60; }
+  .card .comment .primary-btn2 {
+    padding-left: 25px;
+    padding-right: 20px; }
+  .card .comment {
+    color: #555555; }
+  .card .controls .like .lnr {
+    margin-right: 3px;
+    color: #f7427f; }
+  .card .controls .another {
+    text-align: right; }
+    .card .controls .another .lnr {
       color: #f7427f; }
-    .code-view .card .controls .another {
-      text-align: right; }
-      .code-view .card .controls .another .lnr {
-        color: #f7427f; }
-    .code-view .card .controls a {
-      color: #777777;
-      padding: 0; }
+  .card .controls a {
+    color: #777777;
+    padding: 0; }
 
 /*# sourceMappingURL=main.css.map */

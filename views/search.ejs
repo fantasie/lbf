@@ -63,31 +63,31 @@
 	</div>
 </script>
 
-<section class="continent section-gap-sm">
-	<div class="container">
-		<div id="card-wrapper" class="code-view row d-flex justify-content-center session-title">
-			<div class="col-md-8 header-text">
-				<div class="lnr-hover"><span class="lnr lnr-rocket"></span></div>
-				<h2>Find global friends</h2>
-				<p>
-					In which continent are you looking for friends?
-				</p>
+<section class="mt-30 code-view">
+		<div id="card-wrapper" class="container">
+			<div class="row d-flex justify-content-center session-title">
+				<div class="col-md-8 header-text">
+					<div class="lnr-hover"><span class="lnr lnr-rocket"></span></div>
+					<h2>Find global friends</h2>
+					<p>
+						In which continent are you looking for friends?
+					</p>
+					<div class="line"></div>
+				</div>
 			</div>
 		</div>
-
-		<div class="line"></div>
-		<div id="map-continents">
-			<ul class="continents">
-				<li class="c1"><a href="#AF" rel="nofollow">Africa</a><b class="badge badge-info"><%= continentCounts.AF %></b></li>
-				<li class="c2"><a href="#AS" rel="nofollow">Asia</a><b class="badge badge-info"><%= continentCounts.AS %></b></li>
-				<li class="c3"><a href="#OC" rel="nofollow">Australia</a><b class="badge badge-info"><%= continentCounts.OC %></b></li>
-				<li class="c4"><a href="#EU" rel="nofollow">Europe</a><b class="badge badge-info"><%= continentCounts.EU %></b></li>
-				<li class="c5"><a href="#NA" rel="nofollow">North America</a><b class="badge badge-info"><%= continentCounts.NA %></b></li>
-				<li class="c6"><a href="#SA" rel="nofollow">South America</a><b class="badge badge-info"><%= continentCounts.SA %></b></li>
-			</ul>
-		</div>
+</section>
+<section class="continent mb-30">
+	<div id="map-continents">
+		<ul class="continents">
+			<li class="c1"><a href="#AF" rel="nofollow">Africa</a><b class="badge badge-info"><%= continentCounts.AF %></b></li>
+			<li class="c2"><a href="#AS" rel="nofollow">Asia</a><b class="badge badge-info"><%= continentCounts.AS %></b></li>
+			<li class="c3"><a href="#OC" rel="nofollow">Australia</a><b class="badge badge-info"><%= continentCounts.OC %></b></li>
+			<li class="c4"><a href="#EU" rel="nofollow">Europe</a><b class="badge badge-info"><%= continentCounts.EU %></b></li>
+			<li class="c5"><a href="#NA" rel="nofollow">North America</a><b class="badge badge-info"><%= continentCounts.NA %></b></li>
+			<li class="c6"><a href="#SA" rel="nofollow">South America</a><b class="badge badge-info"><%= continentCounts.SA %></b></li>
+		</ul>
 	</div>
-
 	<div class="row country-list justify-content-center" id="country-list">
 		<% if (typeof countries == 'object') { %>
 		<% countries.forEach(function(o) { %>

@@ -446,11 +446,9 @@ a, a:hover {
   margin: 10px 0;
 }
 
-
-.code-view {
+.my-code-view {
   padding-right: 10px;
   padding-left: 10px;
-  padding-bottom: 20px;
 
   h2 {
 	padding-bottom: 10px;
@@ -461,94 +459,110 @@ a, a:hover {
   }
 
   .card {
-	margin: auto;
 	margin-bottom: 20px;
-	border-radius: 5px;
-	border: 3px solid #fbcdd2;
-	//background-color:$offwhite;
-	padding: 20px;
-	width: 100%;
+  }
+}
 
-	@media ( min-width:460px ) {
-	  width: 400px;
-	}
+.code-view {
+  padding-right: 10px;
+  padding-left: 10px;
 
-	.row {
-	  padding-left: 15px;
-	  padding-right: 15px;
-	}
+  h2 {
+	padding-bottom: 10px;
+  }
 
-	.info {
-	  width: 70%;
+  .header-text {
+	text-align: center;
+  }
+}
 
-	  .flag-mini {
-		width: 30px;
-		margin: auto;
+.card {
+  margin: auto;
+  border-radius: 5px;
+  border: 3px solid #fbcdd2;
+  //background-color:$offwhite;
+  padding: 20px;
+  width: 100%;
 
-		img {
-		  width: 30px;
-		}
-	  }
-	}
+  @media ( min-width:460px ) {
+	width: 400px;
+  }
 
-	.image {
-	  text-align: right;
+  .row {
+	padding-left: 15px;
+	padding-right: 15px;
+  }
+
+  .info {
+	width: 70%;
+
+	.flag-mini {
+	  width: 30px;
 	  margin: auto;
-	  width: 80px;
 
 	  img {
-		width: 80px;
-		height: 80px;
+		width: 30px;
+	  }
+	}
+  }
+
+  .image {
+	text-align: right;
+	margin: auto;
+	width: 80px;
+
+	img {
+	  width: 80px;
+	  height: 80px;
+	}
+  }
+
+  .label {
+	font-size: .8em;
+  }
+
+  .text {
+	font-weight: 400;
+	color: $primary-color2;
+  }
+
+  .trainer-code {
+	font-size: 1.8em;
+	font-weight: 400;
+	letter-spacing: 2px;
+	color: $primary-color2;
+
+  }
+
+  .comment {
+	.primary-btn2 {
+	  padding-left: 25px;
+	  padding-right: 20px;
+	}
+  }
+
+  .comment {
+	color: #555555;
+  }
+
+  .controls {
+	.like {
+	  .lnr {
+		margin-right: 3px;
+		color: $primary-color;
 	  }
 	}
 
-	.label {
-	  font-size: .8em;
-	}
-
-	.text {
-	  font-weight: 400;
-	  color: $primary-color2;
-	}
-
-	.trainer-code {
-	  font-size: 1.8em;
-	  font-weight: 400;
-	  letter-spacing: 2px;
-	  color: $primary-color2;
-
-	}
-
-	.comment {
-	  .primary-btn2 {
-		padding-left: 25px;
-		padding-right: 20px;
+	.another {
+	  text-align: right;
+	  .lnr {
+		color: $primary-color;
 	  }
 	}
 
-	.comment {
-	  color: #555555;
-	}
-
-	.controls {
-	  .like {
-		.lnr {
-		  margin-right: 3px;
-		  color: $primary-color;
-		}
-	  }
-
-	  .another {
-		text-align: right;
-		.lnr {
-		  color: $primary-color;
-		}
-	  }
-
-	  a {
-		color: $text-color;
-		padding: 0;
-	  }
+	a {
+	  color: $text-color;
+	  padding: 0;
 	}
   }
 }
