@@ -69,3 +69,25 @@ exports.getCountriesByContinent = function(continent, callback) {
 		});
 	});
 };
+
+exports.getContinentCounts = function(callback) {
+	pool.getConnection(function (err, connection) {
+		if (err) {
+			logger.error("can not get mysql connection.");
+			connection.release();
+			return callback(err);
+		}
+
+		var sql = 'select continent, sum(`count`) as `count` from country group by continent';
+		connection.query(sql, function (err, result) {
+			if (err) {
+				logger.error("can not excute mysql query: " + sql + ", " + err);
+				connection.release();
+				return callback(err);
+			}
+
+			connection.release();
+			return callback(null, result);
+		});
+	});
+};
