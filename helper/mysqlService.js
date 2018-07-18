@@ -32,6 +32,10 @@ exports.getRandomCode = function(data, callback) {
 		if (data.continent) {
 			where = where + " and continent = '" + data.continent + "'"
 		}
+
+		if (data.codeId) {
+			where = where + " and id != " + data.codeId;
+		}
 		var sql = 'select * from code ' + where + ' order by rand() limit 1';
 		logger.debug(sql);
 		connection.query(sql, function (err, result) {

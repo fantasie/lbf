@@ -13,7 +13,6 @@
 	<div class="card">
 		<div class="row">
 			<div class="info">
-				<input type="hidden" name="code_id" value="{%= rc.code.id %}">
 				<div class="label">Trainer Name</div>
 				<div class="text">{%= rc.code.trainer_name %}</div>
 
@@ -38,8 +37,8 @@
 		</div>
 
 		<div class="row comment justify-content-center mt-10">
-			<button class="primary-btn2 text-uppercase mr-15 like-btn">LIKE<span class="lnr lnr-thumbs-up"></span></button>
-			<button class="primary-btn2 text-uppercase dislike-btn">DISLIKE<span class="lnr lnr-thumbs-down"></span></button>
+			<button class="primary-btn2 text-uppercase mr-15 like-btn" data-code_id="{%= rc.code.id %}">LIKE<span class="lnr lnr-thumbs-up"></span></button>
+			<button class="primary-btn2 text-uppercase dislike-btn" data-code_id="{%= rc.code.id %}">DISLIKE<span class="lnr lnr-thumbs-down"></span></button>
 		</div>
 
 		<div class="line"></div>
@@ -48,7 +47,7 @@
 			<div class="col-4 like">
 				<a href="#"><span class="lnr lnr-thumbs-up"></span><span class="like-val">{%= rc.code.like %}</span></a>
 			</div>
-			<div class="another col-8" data-country_code="{%= rc.reqCountryCode %}" data-continent="{%= rc.reqContinent %}">
+			<div class="another col-8" data-country_code="{%= rc.reqCountryCode %}" data-continent="{%= rc.reqContinent %}" data-code_id="{%= rc.code.id %}">
 				<a href="#">Find another trainer <span class="lnr lnr-sync"></span></a>
 			</div>
 		</div>
@@ -121,13 +120,15 @@
 			_dislikeBtnEl && _dislikeBtnEl.tooltip('hide');
 
 			var countryCode = $(e.currentTarget).data('country_code'),
-				continent = $(e.currentTarget).data('continent');
+				continent = $(e.currentTarget).data('continent'),
+				codeId = $(e.currentTarget).data('code_id');
 			$.ajax({
 				type: "POST",
 				url: "/code/search/country",
 				data: {
 					continent: continent,
 					country_code: countryCode,
+					code_id: codeId,
 					path: "/code/search/"
 				},
 				success: function (result) {
@@ -184,12 +185,12 @@
 
 					likeBtnEl.click(function(e) {
 						e.preventDefault();
-						var codeIdEl= $("input[name='code_id']");
+						var codeId= $(e.currentTarget).data('code_id');
 						$.ajax({
 							type: "POST",
 							url: "/code/like",
 							data: {
-								code_id: codeIdEl.val(),
+								code_id: codeId,
 								path: "/code/search/"
 							},
 							success: function(result) {
@@ -224,12 +225,12 @@
 
 					dislikeBtnEl.click(function(e) {
 						e.preventDefault();
-						var codeIdEl= $("input[name='code_id']");
+						var codeId= $(e.currentTarget).data('code_id');
 						$.ajax({
 							type: "POST",
 							url: "/code/dislike",
 							data: {
-								code_id: codeIdEl.val(),
+								code_id: codeId,
 								path: "/code/search/"
 							},
 							success: function(result) {

@@ -521,7 +521,8 @@ router.post('/search/country', responseHelper.checkLoginWithResult, function(req
 			mysqlService.getRandomCode({
 				userId: userId,
 				countryCode: req.body.country_code,
-				continent: req.body.continent
+				continent: req.body.continent,
+				codeId: req.body.code_id,
 			}, callback);
 		},
 		function(data, callback) {
