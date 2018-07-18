@@ -1758,20 +1758,30 @@ a, a:hover {
     @media (min-width: 700px) {
       .continent .country-list {
         width: 650px; } }
-    .continent .country-list .country {
-      margin: 3px 5px;
-      color: #555;
+    .continent .country-list button.country {
+      outline: none;
+      cursor: pointer;
+      border-radius: 4px;
+      line-height: 20px;
+      margin: 5px;
+      border: 1px solid #999;
+      font-size: .8em;
+      text-align: center;
+      text-decoration: none;
       font-size: .9em;
-      letter-spacing: 0; }
-      .continent .country-list .country a {
-        color: #555; }
+      letter-spacing: 0;
+      color: #555; }
+    .continent .country-list .selected {
+      font-weight: 500;
+      background-color: #fff; }
+    .continent .country-list .unselected {
+      font-weight: 300;
+      background-color: #fff;
+      color: #777; }
     .continent .country-list .flag-img {
       width: 20px; }
       .continent .country-list .flag-img img {
         width: 20px; }
-
-.selected {
-  font-weight: bold; }
 
 .register {
   padding-right: 10px;
