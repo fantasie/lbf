@@ -509,7 +509,6 @@ router.post('/search/country', responseHelper.checkLoginWithResult, function(req
 			bookshelfService.getCodes(userId, function(err, data){
 				if (!data || data.length == 0) {
 					var result = responseHelper.getDefaultResult(req);
-					result.continent = req.body.continent;
 					result.errorType = "register";
 					result.errorMessage = "First, register your code!";
 					return res.json(result);
@@ -563,7 +562,8 @@ router.post('/search/country', responseHelper.checkLoginWithResult, function(req
 		}
 	], function (err, data) {
 		var result = responseHelper.getDefaultResult(req);
-		result.continent = req.body.continent;
+		result.reqCountryCode = req.body.country_code;
+		result.reqContinent = req.body.continent;
 
 		if (err) {
 			logger.warn("failed to increase view: userId: " + req.user.user_id);
@@ -617,6 +617,7 @@ router.post('/search/continent', function(req, res){
 		data.unshift({ country_code: "ALL", country_name: "ALL" });
 
 		result.countries = data;
+		result.continent = continent;
 		return res.json(result);
 	});
 });

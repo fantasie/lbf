@@ -1,8 +1,8 @@
 <% include ./head %>
 
 <script type="text/template" id="tpl_countryList">
-	{% rc.forEach(function(o){ %}
-	<button class="country unselected" data-country_code="{%= o.country_code %}">
+	{% rc.countries.forEach(function(o){ %}
+	<button class="country unselected" data-country_code="{%= o.country_code %}" data-continent="{%= rc.continent %}">
 		<span class='flag-img'><img src='/img/flag/{%= o.country_code %}.png' title='{%= o.country_name %}'></span>
 		<span class="text">{%= o.country_name %}</span>
 	</button>
@@ -13,23 +13,23 @@
 	<div class="card">
 		<div class="row">
 			<div class="info">
-				<input type="hidden" name="code_id" value="{%= rc.id %}">
+				<input type="hidden" name="code_id" value="{%= rc.code.id %}">
 				<div class="label">Trainer Name</div>
-				<div class="text">{%= rc.trainer_name %}</div>
+				<div class="text">{%= rc.code.trainer_name %}</div>
 
 				<div class="label mt-10">Country</div>
-				<div class="text"><span class="flag-mini"><img src='/img/flag/{%= rc.country_code %}.png' title='{%= rc.country_name %}'></span> {%= rc.country_name %}</div>
+				<div class="text"><span class="flag-mini"><img src='/img/flag/{%= rc.code.country_code %}.png' title='{%= rc.code.country_name %}'></span> {%= rc.code.country_name %}</div>
 			</div>
 
-			<div class="image"><img src="{%= rc.user_image %}"></div>
+			<div class="image"><img src="{%= rc.code.user_image %}"></div>
 		</div>
 
 		<div class="row label  mt-10">Trainer Code</div>
-		<div id="trainer-code" class="row trainer-code">{%= rc.trainer_code %}</div>
+		<div id="trainer-code" class="row trainer-code">{%= rc.code.trainer_code %}</div>
 
-		{% if (rc.comment) { %}
+		{% if (rc.code.comment) { %}
 		<div class="line2"></div>
-		<div class="row comment">{%= rc.comment %}</div>
+		<div class="row comment">{%= rc.code.comment %}</div>
 		<div class="line2"></div>
 		{% } %}
 
@@ -46,9 +46,9 @@
 
 		<div class="row controls">
 			<div class="col-4 like">
-				<a href="#"><span class="lnr lnr-thumbs-up"></span><span class="like-val">{%= rc.like %}</span></a>
+				<a href="#"><span class="lnr lnr-thumbs-up"></span><span class="like-val">{%= rc.code.like %}</span></a>
 			</div>
-			<div class="another col-8" data-country_code="{%= rc.country_code %}">
+			<div class="another col-8" data-country_code="{%= rc.reqCountryCode %}" data-continent="{%= rc.reqContinent %}">
 				<a href="#">Find another trainer <span class="lnr lnr-sync"></span></a>
 			</div>
 		</div>
@@ -92,7 +92,7 @@
 	<div class="row country-list justify-content-center" id="country-list">
 		<% if (typeof countries == 'object') { %>
 		<% countries.forEach(function(o) { %>
-		<button class="country unselected" data-country_code="<%= o.country_code %>">
+		<button class="country unselected" data-country_code="<%= o.country_code %>" data-continent="<%= continent%>">
 			<span class='flag-img'><img src='/img/flag/<%= o.country_code %>.png' title='<%= o.country_name %>'></span>
 			<span class="text"><%= o.country_name %></span>
 		</button>
@@ -108,15 +108,13 @@
 	$(document).ready(function(){
 		var countryListEl = $("#country-list"),
 			cardEl= $("#card-wrapper"),
-			continentCode = $("#continent-holder").val(),
 			lastSelected;
 
 		var onclick = function(e) {
 			var rLink = e.children("A").eq(0).attr("href"),
 				rText = e.children("A").eq(0).text(),
-				rClass = e.attr("class").split(" ")[0];
-
-			continentCode = continentCodeMap[rText];
+				rClass = e.attr("class").split(" ")[0],
+				continentCode = continentCodeMap[rText];
 
 			$.ajax({
 				type: "POST",
@@ -135,7 +133,7 @@
 					}
 
 					if (result.countries) {
-						var newHtml = _.template($('#tpl_countryList').html())(result.countries);
+						var newHtml = _.template($('#tpl_countryList').html())(result);
 						countryListEl.html(newHtml);
 					}
 				},
@@ -157,12 +155,13 @@
 			_likeBtnEl && _likeBtnEl.tooltip('hide');
 			_dislikeBtnEl && _dislikeBtnEl.tooltip('hide');
 
-			var countryCode = $(e.currentTarget).data('country_code');
+			var countryCode = $(e.currentTarget).data('country_code'),
+				continent = $(e.currentTarget).data('continent');
 			$.ajax({
 				type: "POST",
 				url: "/code/search/country",
 				data: {
-					continent: continentCode,
+					continent: continent,
 					country_code: countryCode,
 					path: "/code/search/"
 				},
@@ -183,7 +182,7 @@
 						return;
 					}
 
-					cardEl.html(_.template($('#tpl_card').html())(result.code));
+					cardEl.html(_.template($('#tpl_card').html())(result));
 					// add event listener
 					new ClipboardJS('.copy-btn');
 					var copyBtnEl = $('.copy-btn'),
@@ -327,6 +326,7 @@
 			"onClick": onclick
 		});
 
+		var continentCode = $("#continent-holder").val();
 		if (continentCode) {
 			var classMap = {
 				AF: "c1",
