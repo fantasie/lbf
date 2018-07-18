@@ -30,20 +30,6 @@
 
 <script src="/javascripts/main.js"></script>
 
-<script>
-	var loggedEl = $('.logged');
-	if (loggedEl) {
-		loggedEl.tooltip({
-			placement: 'bottom'
-		});
-		loggedEl.click(function(e) {
-			setTooltip(loggedEl, loggedEl.data('info'));
-			hideTooltip(loggedEl);
-		});
-	};
-</script>
-
-
 <script type="text/javascript">
 	_.templateSettings = {
 		interpolate: /\{%=([\s\S]+?)%\}/g,

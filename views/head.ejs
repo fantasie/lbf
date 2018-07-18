@@ -51,7 +51,6 @@
 							<% } else { %>
 							<a href="/account/login">Login</a>
 							<% } %>
-							<a href="/code/search">Look Up</a>
 							<a href="/about">About</a>
 						</nav>
 
@@ -63,7 +62,12 @@
 							<div class="user-icon"><a href="#"><span class="lnr lnr-user"></span></a></div>
 							<% } %>
 						</div>
+						<% } else { %>
+						<div class="logged">
+							<div class="user-icon"><a href="/account/login"><span class="lnr lnr-user"></span></a></div>
+						</div>
 						<% } %>
+						<div class="search-icon"><a href="/code/search"><span class="lnr lnr-rocket"></span></a></div>
 						<div class="menu-bar"><span class="lnr lnr-menu"></span></div>
 					</div>
 				</div>

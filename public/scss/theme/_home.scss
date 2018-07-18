@@ -386,12 +386,22 @@ a, a:hover {
 }
 
 .logged {
+  margin-right: 17px;
+}
+
+.search-icon {
   margin-right: 15px;
+  margin-top: 1px;
+
+  span {
+	color: #000;
+	font-size: 19px;
+  }
 }
 
 .circle-img {
-  width: 30px;
-  height: 30px;
+  width: 29px;
+  height: 29px;
   border: 1px solid #ededed;
   border-radius: 50%;
   position: relative;

@@ -43,18 +43,21 @@ body {
 	position: relative;
 }
 
-.logo-ball {
-  width: 20px;
-  height: 20px;
-}
+.logo {
+  min-width: 180px;
+  .logo-ball {
+	width: 20px;
+	height: 20px;
+  }
 
-.logo span {
-    margin-left: 5px;
-    font-family: "Poppins", sans-serif;
-    font-weight: 600;
-    color: #222222;
-    font-size: 16px;
-  	text-transform: uppercase;
+  span {
+	margin-left: 5px;
+	font-family: "Poppins", sans-serif;
+	font-weight: 600;
+	color: #222222;
+	font-size: 16px;
+	text-transform: uppercase;
+  }
 }
 
 nav {

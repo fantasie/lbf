@@ -1454,17 +1454,18 @@ body {
 .main-menubar {
   position: relative; }
 
-.logo-ball {
-  width: 20px;
-  height: 20px; }
-
-.logo span {
-  margin-left: 5px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  color: #222222;
-  font-size: 16px;
-  text-transform: uppercase; }
+.logo {
+  min-width: 180px; }
+  .logo .logo-ball {
+    width: 20px;
+    height: 20px; }
+  .logo span {
+    margin-left: 5px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    color: #222222;
+    font-size: 16px;
+    text-transform: uppercase; }
 
 nav {
   margin-right: 70px;
@@ -1805,11 +1806,18 @@ a, a:hover {
   font-size: 17px; }
 
 .logged {
-  margin-right: 15px; }
+  margin-right: 17px; }
+
+.search-icon {
+  margin-right: 15px;
+  margin-top: 1px; }
+  .search-icon span {
+    color: #000;
+    font-size: 19px; }
 
 .circle-img {
-  width: 30px;
-  height: 30px;
+  width: 29px;
+  height: 29px;
   border: 1px solid #ededed;
   border-radius: 50%;
   position: relative;
