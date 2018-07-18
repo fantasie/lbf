@@ -154,15 +154,15 @@ a, a:hover {
 }
 
 .banner-area {
-  background:url(../img/bg.jpg) no-repeat center center/cover;
+  background:url(../img/bg2.jpg) no-repeat center center/cover;
   .fullscreen {
 	@include media-breakpoint-down (sm) {
-	  height: 500px !important;
+	  height: 380px !important;
 	}
   }
 
   .overlay-bg {
-	opacity:.8;
+	opacity:.5;
 	background-image: -webkit-linear-gradient(bottom, rgb(246,46,113) 0%, rgb(255,255,255) 100%);
 	background-image: -o-linear-gradient(bottom, rgb(246,46,113) 0%, rgb(255,255,255) 100%);
 	background-image: linear-gradient(to top, rgb(246,46,113) 0%, rgb(255,255,255) 100%);
@@ -172,15 +172,15 @@ a, a:hover {
 .banner-content {
   text-align:center;
   @include media-breakpoint-down(sm) {
-	margin-top: 100px;
+	margin-top: 80px;
   }
   h1 {
 	color:$white;
-	font-size: 72px;
+	font-size: 60px;
 	font-weight: 700;
 	line-height: 1.15em;
 	@include media-breakpoint-down(md) {
-	  font-size: 36px;
+	  font-size: 35px;
 	}
 	br {
 	  @include media-breakpoint-down (md) {
@@ -189,11 +189,11 @@ a, a:hover {
 	}
 
 	@include media-breakpoint-down (lg) {
-	  font-size:45px;
+	  font-size:35px;
 	}
 
 	@media ( max-width:414px ) {
-	  font-size:40px;
+	  font-size:35px;
 	}
   }
 
@@ -432,6 +432,21 @@ a, a:hover {
   text-transform: uppercase;
 }
 
+.line {
+  border: 1px dotted #fbcdd2;
+  height: 1px;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.line2 {
+  border: 1px dotted #ededed;
+  height: 1px;
+  width: 100%;
+  margin: 10px 0;
+}
+
+
 .code-view {
   padding-right: 10px;
   padding-left: 10px;
@@ -511,22 +526,8 @@ a, a:hover {
 	  }
 	}
 
-	.line {
-	  border: 1px dotted #fbcdd2;
-	  height: 1px;
-	  width: 100%;
-	  margin: 10px 0;
-	}
-
 	.comment {
 	  color: #555555;
-	}
-
-	.line2 {
-	  border: 1px dotted #ededed;
-	  height: 1px;
-	  width: 100%;
-	  margin: 10px 0;
 	}
 
 	.controls {

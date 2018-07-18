@@ -1635,12 +1635,12 @@ a, a:hover {
   bottom: 0; }
 
 .banner-area {
-  background: url(../img/bg.jpg) no-repeat center center/cover; }
+  background: url(../img/bg2.jpg) no-repeat center center/cover; }
   @media (max-width: 767px) {
     .banner-area .fullscreen {
-      height: 500px !important; } }
+      height: 380px !important; } }
   .banner-area .overlay-bg {
-    opacity: .8;
+    opacity: .5;
     background-image: -webkit-linear-gradient(bottom, #f62e71 0%, white 100%);
     background-image: -o-linear-gradient(bottom, #f62e71 0%, white 100%);
     background-image: linear-gradient(to top, #f62e71 0%, white 100%); }
@@ -1649,24 +1649,24 @@ a, a:hover {
   text-align: center; }
   @media (max-width: 767px) {
     .banner-content {
-      margin-top: 100px; } }
+      margin-top: 80px; } }
   .banner-content h1 {
     color: #fff;
-    font-size: 72px;
+    font-size: 60px;
     font-weight: 700;
     line-height: 1.15em; }
     @media (max-width: 991px) {
       .banner-content h1 {
-        font-size: 36px; } }
+        font-size: 35px; } }
     @media (max-width: 991px) {
       .banner-content h1 br {
         display: none; } }
     @media (max-width: 1199px) {
       .banner-content h1 {
-        font-size: 45px; } }
+        font-size: 35px; } }
     @media (max-width: 414px) {
       .banner-content h1 {
-        font-size: 40px; } }
+        font-size: 35px; } }
   .banner-content p {
     color: #fff;
     margin-bottom: 60px;
@@ -1845,6 +1845,18 @@ a, a:hover {
   font-size: 6pt;
   text-transform: uppercase; }
 
+.line {
+  border: 1px dotted #fbcdd2;
+  height: 1px;
+  width: 100%;
+  margin: 10px 0; }
+
+.line2 {
+  border: 1px dotted #ededed;
+  height: 1px;
+  width: 100%;
+  margin: 10px 0; }
+
 .code-view {
   padding-right: 10px;
   padding-left: 10px;
@@ -1893,18 +1905,8 @@ a, a:hover {
     .code-view .card .comment .primary-btn2 {
       padding-left: 25px;
       padding-right: 20px; }
-    .code-view .card .line {
-      border: 1px dotted #fbcdd2;
-      height: 1px;
-      width: 100%;
-      margin: 10px 0; }
     .code-view .card .comment {
       color: #555555; }
-    .code-view .card .line2 {
-      border: 1px dotted #ededed;
-      height: 1px;
-      width: 100%;
-      margin: 10px 0; }
     .code-view .card .controls .like .lnr {
       margin-right: 3px;
       color: #f7427f; }
