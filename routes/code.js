@@ -622,29 +622,66 @@ router.post('/search/continent', function(req, res){
 	});
 });
 
+var getContinentCountsMap = function(callback) {
+	mysqlService.getContinentCounts(function(err, data) {
+		if (err || !data) {
+			return callback(null, {});
+		}
+
+		var map = {};
+		data.forEach(function(d) {
+			map[d.continent] = d.count;
+		});
+
+		return callback(null, map);
+	});
+};
+
 router.get('/search', function(req, res){
 	var result = responseHelper.getDefaultResult(req);
 
 	var continent = req.query.continent;
-	if (continent) {
-		mysqlService.getCountriesByContinent(continent, function(err, data) {
+	if (!continent) {
+		result.continent = "";
+
+		getContinentCountsMap(function(err, data){
+			if (err || !data) {
+				result.errorType = "request";
+				result.errorMessage = "Invalid request parameter.";
+				return res.render('search', result);
+			}
+
+			result.continentCounts = data;
+
+			logger.info(result.continentCounts);
+			return res.render('search', result);
+		});
+	} else {
+		async.parallel({
+			continentCounts: getContinentCountsMap,
+			countriesByContinent: function (callback) {
+				mysqlService.getCountriesByContinent(continent, callback);
+			}
+		}, function (err, results) {
 			if (err) {
 				result.errorType = "request";
 				result.errorMessage = "Invalid request parameter.";
 				return res.render('search', result);
 			}
 
+			var data = results.countriesByContinent;
 			if (!data) {
 				data = [];
 			}
-			data.unshift({ country_code: "ALL", country_name: "ALL" });
+			data.unshift({country_code: "ALL", country_name: "ALL"});
 			result.countries = data;
 			result.continent = continent;
+			result.continentCounts = results.continentCounts;
+
+			logger.info(result.continentCounts);
+
 			return res.render('search', result);
 		});
-	} else {
-		result.continent = "";
-		return res.render('search', result);
 	}
 });
 
