@@ -117,7 +117,6 @@
 				rClass = e.attr("class").split(" ")[0];
 
 			continentCode = continentCodeMap[rText];
-//			lastSelected = undefined;
 
 			$.ajax({
 				type: "POST",
@@ -144,10 +143,20 @@
 					alert('[ERROR] ' + e);
 				}
 			});
+
+			return;
 		};
 
 		var getCodeEvent = function(e) {
 			e.preventDefault();
+
+			var _copyBtnEl = $('.copy-btn'),
+				_likeBtnEl = $(".like-btn"),
+				_dislikeBtnEl = $(".dislike-btn");
+			_copyBtnEl && _copyBtnEl.tooltip('hide');
+			_likeBtnEl && _likeBtnEl.tooltip('hide');
+			_dislikeBtnEl && _dislikeBtnEl.tooltip('hide');
+
 			var countryCode = $(e.currentTarget).data('country_code');
 			$.ajax({
 				type: "POST",
@@ -169,15 +178,18 @@
 						return;
 					}
 
-					if (result.code) {
-						cardEl.html(_.template($('#tpl_card').html())(result.code));
-					} else {
+					if (!result.code) {
 						cardEl.html(_.template($('#tpl_card-error').html())());
+						return;
 					}
 
+					cardEl.html(_.template($('#tpl_card').html())(result.code));
 					// add event listener
 					new ClipboardJS('.copy-btn');
-					var copyBtnEl = $('.copy-btn');
+					var copyBtnEl = $('.copy-btn'),
+						likeBtnEl = $(".like-btn"),
+						dislikeBtnEl = $(".dislike-btn");
+
 					copyBtnEl.tooltip({
 						trigger: 'manual',
 						placement: 'top'
@@ -188,17 +200,23 @@
 						hideTooltip(copyBtnEl);
 					});
 
-					var likeBtnEl = $(".like-btn");
 					$('.like-btn').tooltip({
 						trigger: 'manual',
 						placement: 'bottom'
 					});
 
-					var dislikeBtnEl = $(".dislike-btn");
 					$('.dislike-btn').tooltip({
 						trigger: 'manual',
 						placement: 'bottom'
 					});
+
+					if (result.code.liked) {
+						likeBtnEl.addClass('primary-btn2-selected');
+					}
+
+					if (result.code.disliked) {
+						dislikeBtnEl.addClass('primary-btn2-selected');
+					}
 
 					likeBtnEl.click(function(e) {
 						e.preventDefault();
@@ -220,12 +238,19 @@
 									return;
 								}
 
-								setTooltip(likeBtnEl, 'Liked!');
-								hideTooltip(likeBtnEl);
+								var likeEl = $(".like-val"),
+									msg = (result.isCancel) ? "Canceled!" : "Liked!",
+									increments = (result.isCancel) ? -1 : 1;
 
-								// increase
-								var likeEl = $(".like-val");
-								likeEl.text(Number(likeEl.text()) + 1);
+								if (result.isCancel) {
+									likeBtnEl.removeClass('primary-btn2-selected');
+								} else {
+									likeBtnEl.addClass('primary-btn2-selected');
+								}
+
+								likeEl.text(Number(likeEl.text()) + increments);
+								setTooltip(likeBtnEl, msg);
+								hideTooltip(likeBtnEl);
 							},
 							error: function(req, status, e) {
 								alert('[ERROR] ' + e);
@@ -253,7 +278,15 @@
 									return;
 								}
 
-								setTooltip(dislikeBtnEl, 'Disliked!');
+								var msg = (result.isCancel) ? "Canceled!" : "Disliked!";
+
+								if (result.isCancel) {
+									dislikeBtnEl.removeClass('primary-btn2-selected');
+								} else {
+									dislikeBtnEl.addClass('primary-btn2-selected');
+								}
+
+								setTooltip(dislikeBtnEl, msg);
 								hideTooltip(dislikeBtnEl);
 							},
 							error: function(req, status, e) {
@@ -264,7 +297,6 @@
 
 					$(".another").click(getCodeEvent);
 					// event listener end
-
 				},
 				error: function (req, status, e) {
 					alert('[ERROR] ' + e);

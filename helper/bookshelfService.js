@@ -281,3 +281,20 @@ exports.insertAction = function(user, code, type, callback) {
 		return callback(err, null);
 	});
 };
+
+exports.deleteAction = function(user, code, type, callback) {
+	models.models.Action.where({
+		user_id: user.user_id,
+		type: type,
+		other_user_id: code.user_id,
+		code_id: code.id
+	})
+	.destroy()
+	.then(function (result) {
+		return callback(null, result);
+	})
+	.catch(function (err) {
+		logger.error(err);
+		return callback(err, null);
+	});
+};

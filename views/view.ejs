@@ -123,12 +123,13 @@
 					return;
 				}
 
-				setTooltip(likeBtnEl, 'Liked!');
-				hideTooltip(likeBtnEl);
+				var likeEl = $(".like-val"),
+						msg = (result.isCancel) ? "Canceled!" : "Liked!",
+						increments = (result.isCancel) ? -1 : 1;
 
-				// increase
-				var likeEl = $(".like-val");
-				likeEl.text(Number(likeEl.text()) + 1);
+				likeEl.text(Number(likeEl.text()) + increments);
+				setTooltip(likeBtnEl, msg);
+				hideTooltip(likeBtnEl);
 			},
 			error: function(req, status, e) {
 				alert('[ERROR] ' + e);
@@ -155,7 +156,8 @@
 					return;
 				}
 
-				setTooltip(dislikeBtnEl, 'Disliked!');
+				var msg = (result.isCancel) ? "Canceled!" : "Disliked!";
+				setTooltip(dislikeBtnEl, msg);
 				hideTooltip(dislikeBtnEl);
 			},
 			error: function(req, status, e) {

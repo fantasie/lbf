@@ -76,6 +76,10 @@ a, a:hover {
 
 }
 
+.primary-btn2-selected {
+  background-color: #ededed;
+}
+
 .primary-btn2{
 	display: inline-block;
 	outline: none;
@@ -87,7 +91,7 @@ a, a:hover {
 	text-decoration: none;
 	font-weight: 500;
 	cursor: pointer;
-	@include transition();
+
 	&:focus {
 		outline: none;
 	}

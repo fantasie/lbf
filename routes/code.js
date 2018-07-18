@@ -319,6 +319,22 @@ var addAction = function(type, req, res) {
 		return res.json(result);
 	}
 
+	var resultFunc = function (err, data) {
+		if (err) {
+			result.errorType = "database";
+			result.errorMessage = "Can not save action.";
+			return res.json(result);
+		}
+
+		if (!data) {
+			result.errorType = "request";
+			result.errorMessage = "Can not save action.";
+			return res.json(result);
+		}
+
+		return res.json(result);
+	};
+
 	var likeFunc = function(user, codeId, type) {
 			async.waterfall([
 				function (callback) {
@@ -336,33 +352,37 @@ var addAction = function(type, req, res) {
 					}
 					bookshelfService.adjustCode(codeId, type, 1, callback);
 				}
-			], function (err, data) {
-				var result = responseHelper.getDefaultResult(req);
-				if (err) {
-					result.errorType = "database";
-					result.errorMessage = "Can not save action.";
-					return res.json(result);
-				}
-
-				if (!data) {
-					result.errorType = "request";
-					result.errorMessage = "Can not save action.";
-					return res.json(result);
-				}
-
-				return res.json(result);
-			});
+			], resultFunc);
 		};
+
+	var cancelLikeFunc = function(user, codeId, type) {
+		async.waterfall([
+			function (callback) {
+				bookshelfService.getCode(codeId, callback);
+			},
+			function (data, callback) {
+				if (!data) {
+					return callback("Code not found.");
+				}
+				bookshelfService.deleteAction(user, data, type, callback);
+			},
+			function (data, callback) {
+				if (!data) {
+					return callback("can not save action.");
+				}
+				bookshelfService.adjustCode(codeId, type, -1, callback);
+			}
+		], resultFunc);
+	};
 
 	bookshelfService.getAction(req.user, codeId, type, function(err, action) {
 		if (action) {
-			var result = responseHelper.getDefaultResult(req);
-			result.errorType = "already";
-			result.errorMessage = "Already " + type.toLowerCase() + "d.";
-			return res.json(result);
+			result.isCancel = true;
+			return cancelLikeFunc(req.user, codeId, type);
 		}
 
-		likeFunc(req.user, codeId, type);
+		result.isCancel = false;
+		return likeFunc(req.user, codeId, type);
 	});
 };
 
@@ -514,6 +534,32 @@ router.post('/search/country', responseHelper.checkLoginWithResult, function(req
 			bookshelfService.adjustCode(data.id, 'view', 1, function() {
 				callback(null, data);
 			});
+		},
+		function(data, callback) {
+			if (!data) {
+				return callback(null, null);
+			}
+
+			// check whether already like
+			bookshelfService.getAction(req.user, data.id, "LIKE", function(err, action) {
+				if (action) {
+					data.liked = true;
+				};
+				callback(null, data);
+			});
+		},
+		function(data, callback) {
+			if (!data) {
+				return callback(null, null);
+			}
+
+			// check whether already dislike
+			bookshelfService.getAction(req.user, data.id, "DISLIKE", function(err, action) {
+				if (action) {
+					data.disliked = true;
+				};
+				callback(null, data);
+			});
 		}
 	], function (err, data) {
 		var result = responseHelper.getDefaultResult(req);
@@ -539,7 +585,9 @@ router.post('/search/country', responseHelper.checkLoginWithResult, function(req
 			country_code: data.country_code,
 			country_name: commonUtil.getCountry(data.country_code).countryName,
 			user_image: (data.user_image) ? data.user_image : serviceConfig.defaultUserImage,
-			comment: data.comment
+			comment: data.comment,
+			liked: data.liked,
+			disliked: data.disliked
 		};
 
 		return res.json(result);

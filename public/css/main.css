@@ -1574,6 +1574,9 @@ a, a:hover {
       color: #fff;
       right: 20px; }
 
+.primary-btn2-selected {
+  background-color: #ededed; }
+
 .primary-btn2 {
   display: inline-block;
   outline: none;
@@ -1584,11 +1587,7 @@ a, a:hover {
   text-align: center;
   text-decoration: none;
   font-weight: 500;
-  cursor: pointer;
-  -webkit-transition: all 0.3s ease 0s;
-  -moz-transition: all 0.3s ease 0s;
-  -o-transition: all 0.3s ease 0s;
-  transition: all 0.3s ease 0s; }
+  cursor: pointer; }
   .primary-btn2:focus {
     outline: none; }
   .primary-btn2.e-large {
