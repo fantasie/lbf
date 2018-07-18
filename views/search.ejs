@@ -2,12 +2,10 @@
 
 <script type="text/template" id="tpl_countryList">
 	{% rc.forEach(function(o){ %}
-	<div class="country" data-country_code="{%= o.country_code %}">
-		<a href="#">
-			<span class='flag-img'><img src='/img/flag/{%= o.country_code %}.png' title='{%= o.country_name %}'></span>
-			<span class="text">{%= o.country_name %}</span>
-		</a>
-	</div>
+	<button class="country unselected" data-country_code="{%= o.country_code %}">
+		<span class='flag-img'><img src='/img/flag/{%= o.country_code %}.png' title='{%= o.country_name %}'></span>
+		<span class="text">{%= o.country_name %}</span>
+	</button>
 	{% }); %}
 </script>
 
@@ -94,12 +92,10 @@
 	<div class="row country-list justify-content-center" id="country-list">
 		<% if (typeof countries == 'object') { %>
 		<% countries.forEach(function(o) { %>
-		<div class="country" data-country_code="<%= o.country_code %>">
-			<a href="#">
-				<span class='flag-img'><img src='/img/flag/<%= o.country_code %>.png' title='<%= o.country_name %>'></span>
-				<span class="text"><%= o.country_name %></span>
-			</a>
-		</div>
+		<button class="country unselected" data-country_code="<%= o.country_code %>">
+			<span class='flag-img'><img src='/img/flag/<%= o.country_code %>.png' title='<%= o.country_name %>'></span>
+			<span class="text"><%= o.country_name %></span>
+		</button>
 		<% }); %>
 		<% } %>
 	</div>
@@ -278,9 +274,11 @@
 		var resetSelectedAndGetCodeEvent = function(e) {
 			if (lastSelected) {
 				lastSelected.removeClass('selected');
+				lastSelected.addClass('unselected');
 			}
 
-			lastSelected = $(e.currentTarget).find('span.text');
+			lastSelected = $(e.currentTarget);
+			lastSelected.removeClass('unselected');
 			lastSelected.addClass('selected');
 
 			getCodeEvent(e);

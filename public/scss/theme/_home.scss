@@ -306,14 +306,35 @@ a, a:hover {
 	  width: 650px;
 	}
 
-	.country {
-	  margin: 3px 5px;
-	  color: #555;
+	button.country {
+	  outline: none;
+	  cursor: pointer;
+	  border-radius: 4px;
+	  line-height: 20px;
+	  margin: 7px 7px;
+	  border:1px solid #999;
+	  font-size: .8em;
+	  text-align: center;
+	  text-decoration: none;
 	  font-size: .9em;
 	  letter-spacing: 0;
-	  	a {
-		  color: #555;
-		}
+	  color: #555;
+	}
+
+	//button:focus,button:active {
+	//  font-weight: 500;
+	//  background-color: #ededed;
+	//}
+
+	.selected {
+	  font-weight: 500;
+	  background-color: #fff;
+	}
+
+	.unselected {
+	  font-weight: 300;
+	  background-color: #fff;
+	  color: #777;
 	}
 
 	.flag-img {
@@ -324,10 +345,6 @@ a, a:hover {
 	  }
 	}
   }
-}
-
-.selected {
-  font-weight: bold;
 }
 
 .register {
