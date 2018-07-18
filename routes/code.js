@@ -31,7 +31,8 @@ router.post('/register', responseHelper.checkLoginWithResult, function(req, res)
 	var result = responseHelper.getDefaultResult(req),
 		trainerCode = req.body.trainer_code && req.body.trainer_code.replace(/\s/g, ''),
 		trainerName = req.body.trainer_name && req.body.trainer_name.trim(),
-		countryName = req.body.country;
+		countryName = req.body.country,
+		comment = req.body.comment;
 
 	var countryCode = countryName && commonUtil.getCountryCode(countryName),
 		continent = countryCode && commonUtil.getCountry(countryCode).continent;
@@ -65,6 +66,10 @@ router.post('/register', responseHelper.checkLoginWithResult, function(req, res)
 		continent: continent
 	};
 
+	if (comment) {
+		data.comment = comment.substring(0, 1000);
+	}
+
 	async.waterfall([
 		function(callback) {
 			bookshelfService.insertCode(req.user, data, callback);
@@ -88,6 +93,137 @@ router.post('/register', responseHelper.checkLoginWithResult, function(req, res)
 		result.codeId = data.id;
 		return res.json(result);
 	});
+});
+
+router.get('/update/:id', responseHelper.checkLoginWithRedirect, function(req, res) {
+	var result = responseHelper.getDefaultResult(req);
+
+	var id = req.params.id;
+	if (!id) {
+		result.errorType = "request";
+		result.errorMessage = "Invalid request parameter.";
+		return res.render('update', result);
+	}
+
+	bookshelfService.getMyCode(req.user.user_id, id, function(err, code){
+		if (err || !code) {
+			result.errorType = "request";
+			result.errorMessage = "Invalid request parameter.";
+			return res.render('update', result);
+		}
+
+		result.code = code;
+		result.code.trainer_code = formatizeTrainerCode(result.code.trainer_code);
+		result.code.country = commonUtil.getCountry(result.code.country_code).countryName;
+
+		return res.render('update', result);
+	});
+});
+
+router.post('/update', responseHelper.checkLoginWithResult, function(req, res){
+	bookshelfService.getMyCode(req.user.user_id, req.body.code_id, function(err, originalCode) {
+		if (err || !originalCode) {
+			var result = responseHelper.getDefaultResult(req);
+			result.errorType = "request";
+			result.errorMessage = "Invalid request parameter.";
+			return res.json(result);
+		}
+
+		process(req, originalCode);
+	});
+
+	var process = function(req, originalCode) {
+		var result = responseHelper.getDefaultResult(req),
+			originCountryCode = originalCode.country_code,
+			trainerCode = req.body.trainer_code && req.body.trainer_code.replace(/\s/g, ''),
+			trainerName = req.body.trainer_name && req.body.trainer_name.trim(),
+			countryName = req.body.country,
+			comment = req.body.comment,
+			userImage = req.body.user_image && req.body.user_image.trim();
+
+		var countryCode = countryName && commonUtil.getCountryCode(countryName),
+			continent = countryCode && commonUtil.getCountry(countryCode).continent;
+		if (!countryName || !countryCode || !continent) {
+			logger.warn("failed to parse country: " + countryName + ", " + countryCode + ", " + continent);
+
+			result.errorType = "input";
+			result.errorElement = "country";
+			result.errorMessage = "Entered country is invalid.";
+			return res.json(result);
+		}
+
+		if (!trainerName || !/^[A-Za-z0-9]{3,16}$/.test(trainerName)) {
+			result.errorType = "input";
+			result.errorElement = "trainer_name";
+			result.errorMessage = "Entered trainer name is invalid.";
+			return res.json(result);
+		}
+
+		if (!trainerCode || !/^\d{12}$/.test(trainerCode)) {
+			result.errorType = "input";
+			result.errorElement = "trainer_code";
+			result.errorMessage = "Entered trainer code is invalid.";
+			return res.json(result);
+		}
+
+		var data = {
+			id: originalCode.id,
+			trainerCode: trainerCode,
+			trainerName: trainerName,
+			countryCode: countryCode,
+			continent: continent,
+			userImage: userImage
+		};
+
+		if (comment) {
+			data.comment = comment.substring(0, 1000);
+		}
+
+		async.waterfall([
+			function(callback) {
+				bookshelfService.updateCode(req.user, data, callback);
+			},
+			function(data, callback) {
+				if (!data) {
+					result.errorType = "insert";
+					result.errorMessage = "Failed to save data.";
+					return res.json(result);
+				}
+
+				if (originCountryCode == countryCode) {
+					return callback(null, null);
+				}
+
+				bookshelfService.adjustCountryCount(originCountryCode, -1, function(err) {
+					if (err) {
+						logger.error("can not decrease country count. country: " + originCountryCode);
+					}
+					callback(null, data);
+				});
+			},
+			function(data, callback) {
+				if (originCountryCode == countryCode) {
+					return callback(null, null);
+				}
+
+				bookshelfService.adjustCountryCount(countryCode, 1, function(err) {
+					if (err) {
+						logger.error("can not increase country count. country: " + countryCode);
+					}
+					callback(null, data);
+				});
+			}
+		], function (err, data) {
+			if (err) {
+				logger.warn("failed to save: " + err);
+				result.errorType = "insert";
+				result.errorMessage = "Failed to save data.";
+				return res.json(result);
+			}
+
+			return res.json(result);
+		});
+	};
 });
 
 router.get('/view', responseHelper.checkLoginWithRedirect, function(req, res){
@@ -402,7 +538,8 @@ router.post('/search/country', responseHelper.checkLoginWithResult, function(req
 			trainer_code: formatizeTrainerCode(data.trainer_code),
 			country_code: data.country_code,
 			country_name: commonUtil.getCountry(data.country_code).countryName,
-			user_image: (data.user_image) ? data.user_image : serviceConfig.defaultUserImage
+			user_image: (data.user_image) ? data.user_image : serviceConfig.defaultUserImage,
+			comment: data.comment
 		};
 
 		return res.json(result);

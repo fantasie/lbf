@@ -415,6 +415,7 @@ a, a:hover {
 
   .card {
 	margin: auto;
+	margin-bottom: 20px;
 	border-radius: 5px;
 	border: 3px solid #fbcdd2;
 	//background-color:$offwhite;
@@ -480,6 +481,17 @@ a, a:hover {
 
 	.line {
 	  border: 1px dotted #fbcdd2;
+	  height: 1px;
+	  width: 100%;
+	  margin: 10px 0;
+	}
+
+	.comment {
+	  color: #555555;
+	}
+
+	.line2 {
+	  border: 1px dotted #ededed;
 	  height: 1px;
 	  width: 100%;
 	  margin: 10px 0;

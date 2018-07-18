@@ -72,6 +72,7 @@ exports.insertCode = function(user, data, callback) {
 		user_id: user.user_id,
 		name: user.name,
 		user_image: user.image,
+		comment: data.comment,
 		country_code: data.countryCode,
 		trainer_code: data.trainerCode,
 		trainer_name: data.trainerName,
@@ -85,6 +86,30 @@ exports.insertCode = function(user, data, callback) {
 		logger.error(err);
 		return callback(err, null);
 	});
+};
+
+exports.updateCode = function(user, data, callback) {
+	models.models.Code
+		.where({ user_id: user.user_id, id: data.id })
+		.save({
+			name: user.name,
+			user_image: data.userImage,
+			comment: data.comment,
+			country_code: data.countryCode,
+			trainer_code: data.trainerCode,
+			trainer_name: data.trainerName,
+			continent: data.continent
+		},{patch:true})
+		.then(function (code) {
+			if (!code) {
+				return callback(null, null);
+			}
+			return callback(null, code.toJSON());
+		})
+		.catch(function (err) {
+			logger.error(err);
+			return callback(err, null);
+		});
 };
 
 exports.getPopularCountries = function(callback) {
@@ -131,6 +156,21 @@ exports.getCode = function(id, callback) {
 		logger.error(err);
 		return callback(err, null);
 	});
+};
+
+exports.getMyCode = function(userId, id, callback) {
+	models.models.Code.forge({ id: id, user_id: userId })
+		.fetch()
+		.then(function (code) {
+			if (!code) {
+				return callback(null, null);
+			}
+			return callback(null, code.toJSON());
+		})
+		.catch(function (err) {
+			logger.error(err);
+			return callback(err, null);
+		});
 };
 
 exports.deleteMyCode = function(userId, id, callback) {

@@ -43,7 +43,13 @@
 			<div class="row label  mt-10">Trainer Code</div>
 			<div id="trainer-code" class="row trainer-code"><%= code.trainer_code %></div>
 
-			<div class="row justify-content-center mt-20">
+			<% if (code.comment) { %>
+			<div class="line2"></div>
+			<div class="row comment"><%= code.comment %></div>
+			<div class="line2"></div>
+			<% } %>
+
+			<div class="row justify-content-center mt-10">
 				<button class="tt copy-btn primary-btn2 text-uppercase" data-clipboard-target="#trainer-code" data-toggle="tooltip">Copy this trainer code</button>
 			</div>
 			<div class="row comment justify-content-center mt-10">
@@ -65,7 +71,7 @@
 		</div>
 	</div>
 
-	<div class="row justify-content-center pt-20">
+	<div class="row justify-content-center pt-20 pb-20">
 		<a href="/code/search"><button class="primary-btn text-uppercase">Look up more countries<span class="lnr lnr-arrow-right"></span></button></a>
 	</div>
 </section>

@@ -47,23 +47,29 @@
 				<div class="row label  mt-10">Trainer Code</div>
 				<div id="trainer-code" class="row trainer-code"><%= code.trainer_code %></div>
 
+				<% if (code.comment) { %>
+				<div class="line2"></div>
+				<div class="row comment"><%= code.comment %></div>
+				<% } %>
+
 				<div class="line"></div>
 
 				<div class="row controls">
 					<div class="col-6 like">
-						<a href="#"><span class="lnr lnr-thumbs-up"></span><span class="like-val"><%= code.like %></span></a>
+						<a><span class="lnr lnr-thumbs-up"></span><span class="like-val"><%= code.like %></span></a>
 						<span class="pr-1"></span>
-						<a href="#"><span class="lnr lnr-thumbs-down"></span><span class="dislike-val"><%= code.dislike %></span></a>
+						<a><span class="lnr lnr-thumbs-down"></span><span class="dislike-val"><%= code.dislike %></span></a>
 					</div>
 					<div class="another col-6">
-						<a href="#" class="delete-btn" data-code_id="<%= code.id %>" data-country_code="<%= code.country_code %>"><span class="lnr lnr-cog"></span> DELETE</a>
+						<a href="/code/update/<%= code.id %>" class="modify-btn"><span class="lnr lnr-cog"></span>FIX</a>&nbsp;
+						<a href="#" class="delete-btn" data-code_id="<%= code.id %>" data-country_code="<%= code.country_code %>"><span class="lnr lnr-trash"></span>DEL</a>
 					</div>
 				</div>
 			</div>
-			<div class="row justify-content-center pt-20">
-				<a href="/code/search"><button class="primary-btn text-uppercase">Look up other trainers<span class="lnr lnr-arrow-right"></span></button></a>
-			</div>
 			<% }); %>
+		<div class="row justify-content-center pt-20 pb-20">
+			<a href="/code/search"><button class="primary-btn text-uppercase">Look up other trainers<span class="lnr lnr-arrow-right"></span></button></a>
+		</div>
 		<% } %>
 	</div>
 </section>
@@ -99,7 +105,7 @@
 					return;
 				};
 
-				var cardEl = $("#" + "card-" + codeId,);
+				var cardEl = $("#" + "card-" + codeId);
 				cardEl.remove();
 			},
 			error: function(req, status, e) {

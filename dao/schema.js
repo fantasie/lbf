@@ -29,6 +29,7 @@ var Schema = {
 		country_code: { type: 'string', maxlength:10, nullable: false },
 		trainer_code: { type: 'string', maxlength: 20, nullable: false },
 		trainer_name: { type: 'string', maxlength: 50, nullable: false},
+		comment: { type: 'string', maxlength: 1000, nullable: true },
 		is_locked: { type: 'boolean', nullable: false, defaultTo: 0 },
 		is_deleted: { type: 'boolean', nullable: false, defaultTo: 0 }
 	},

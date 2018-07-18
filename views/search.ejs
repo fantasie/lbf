@@ -29,7 +29,13 @@
 		<div class="row label  mt-10">Trainer Code</div>
 		<div id="trainer-code" class="row trainer-code">{%= rc.trainer_code %}</div>
 
-		<div class="row justify-content-center mt-20">
+		{% if (rc.comment) { %}
+		<div class="line2"></div>
+		<div class="row comment">{%= rc.comment %}</div>
+		<div class="line2"></div>
+		{% } %}
+
+		<div class="row justify-content-center mt-10">
 			<button class="tt copy-btn primary-btn2 text-uppercase" data-clipboard-target="#trainer-code" data-toggle="tooltip">Copy this trainer code</button>
 		</div>
 
@@ -115,7 +121,7 @@
 				rClass = e.attr("class").split(" ")[0];
 
 			continentCode = continentCodeMap[rText];
-			lastSelected = undefined;
+//			lastSelected = undefined;
 
 			$.ajax({
 				type: "POST",

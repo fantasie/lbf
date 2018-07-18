@@ -5,18 +5,22 @@
 				<div class="row d-flex justify-content-center session-title">
 					<div class="col-md-8 header-text">
 						<div class="lnr-hover"><span class="lnr lnr-pencil"></span></div>
-						<h2>Share Your Code</h2>
-						<p>
-							Register your trainer code<br>
-							so other trainers can register you as a friend.
-						</p>
 					</div>
 				</div>
 				<form id="form" name="register-form">
 				<div class="row justify-content-center code-view">
+					<% if (typeof errorType != 'undefined' && errorType) { %>
+					<div class="card">
+						<h3>ERROR</h3>
+						<div class="line"></div>
+						<div><%= errorMessage %></div>
+						<div class="line"></div>
+					</div>
+					<% } else { %>
+
 					<div class="input col-md-8">
 						<h4>Search your country</h4>
-						<input id="countries" name="country" class="single-in form-control" placeholder="Search countries" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search countries'" required="true" value="<%= country %>%>"/>
+						<input id="countries" name="country" class="single-in form-control" placeholder="Search countries" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search countries'" required="true" value="<%= code.country %>"/>
 						<div class="feedback feedback-country"></div>
 					</div>
 					<!--<div class="input col-md-8">-->
@@ -25,21 +29,30 @@
 					<!--</div>-->
 					<div class="input col-md-8">
 						<h4>Your trainer name</h4>
-						<input type="text" name="trainer_name" class="single-in form-control" placeholder="Trainer Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Trainer Name'" required="true">
+						<input type="text" name="trainer_name" class="single-in form-control" placeholder="Trainer Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Trainer Name'" required="true" value="<%= code.trainer_name %>">
 						<div class="feedback feedback-trainer_name"></div>
 					</div>
 					<div class="input col-md-8">
 						<h4>Your trainer code</h4>
-						<input type="text" name="trainer_code" class="single-in form-control" placeholder="0000 0000 0000" maxlength=14 onfocus="this.placeholder = ''" onblur="this.placeholder = '0000 0000 0000'" required="true">
+						<input type="text" name="trainer_code" class="single-in form-control" placeholder="0000 0000 0000" maxlength=14 onfocus="this.placeholder = ''" onblur="this.placeholder = '0000 0000 0000'" required="true" value="<%= code.trainer_code %>">
 						<div class="feedback feedback-trainer_code"></div>
 					</div>
 					<div class="input col-md-8">
+						<h4>Image URL</h4>
+						<% if (code.user_image) { %>
+						<div><a href="<%= code.user_image %>" target="_blank"><img src="<%= code.user_image %>" width="50" height="50" border="0"></a></div>
+						<% } %>
+						<input type="text" name="user_image" class="single-in form-control" placeholder="Image URL (optional)" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Image URL (optional)'" required="false" value="<%= code.user_image %>">
+						<div class="feedback feedback-user_image"></div>
+					</div>
+					<div class="input col-md-8">
 						<h4>Comment</h4>
-						<textarea class="single-in form-control" name="comment" placeholder="Comment (optional)" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Comment (optional)'" required="" maxlength="1000"></textarea>
+						<textarea class="single-in form-control" name="comment" placeholder="Comment (optional)" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Comment (optional)'" required="" maxlength="1000"><%= code.comment %></textarea>
 					</div>
 					<div class="col-lg-12 d-flex justify-content-center">
-						<button class="primary-btn mt-30 text-uppercase">OKAY<span class="lnr lnr-arrow-right"></span></button>
+						<button class="primary-btn mt-30 text-uppercase" data-code_id="<%= code.id %>">OKAY<span class="lnr lnr-arrow-right"></span></button>
 					</div>
+					<% } %>
 				</div>
 				</form>
 			</div>
@@ -49,7 +62,7 @@
 
 		<script>
 			var options = {
-				url: "./../resources/countries.json",
+				url: "/resources/countries.json",
 				getValue: "name",
 				minCharNumber: 0,
 				adjustWidth: false,
@@ -167,15 +180,19 @@
 					return;
 				}
 
+				var codeId = $(".primary-btn").data('code_id');
 				var comment = $form.find("textarea[name='comment']").val();
+				var userImage = $form.find("input[name='user_image']").val();
 				$.ajax({
 					type: "POST",
-					url: "/code/register",
+					url: "/code/update",
 					data: {
+						code_id: codeId,
 						country: countryEl.val(),
 						trainer_name: trainerNameEl.val(),
 						trainer_code: trainerCodeEl.val(),
-						comment: comment
+						comment: comment,
+						user_image: userImage
 					},
 					success: function(result) {
 						if (result.errorType == "login") {
@@ -189,13 +206,8 @@
 							return alert('[ERROR] ' + result.errorMessage);
 						}
 
-						if (result.codeId) {
-							alert('Success!');
-//							return window.location.href = '/code/view/' + result.codeId;
-							return window.location.href = '/code/my';
-						}
-
-						alert('[ERROR] ' + "Uknown error occured.");
+						alert('Success!');
+						return window.location.href = '/code/my';
 					},
 					error: function(req, status, e) {
 						alert('[ERROR] ' + e);
