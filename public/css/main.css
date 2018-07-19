@@ -1507,6 +1507,9 @@ nav {
 a, a:hover {
   color: #f7427f; }
 
+ul.continents a {
+  padding: 2px 5px; }
+
 .section-gap {
   padding: 80px 0; }
 
