@@ -102,3 +102,12 @@ var continentCodeMap = {
     "South America": "SA",
     "Australia": "OC"
 };
+
+var continentClassMap = {
+    c1: "AF",
+    c2: "AS",
+    c3: "OC",
+    c4: "EU",
+    c5: "NA",
+    c6: "SA"
+};

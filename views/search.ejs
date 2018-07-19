@@ -56,7 +56,7 @@
 
 <script type="text/template" id="tpl_card-error">
 	<div class="card">
-		<h3>ERROR</h3>
+		<h3>OOPS!</h3>
 		<div class="line"></div>
 		<div>Trainer data does not exist in the country you selected. Please try other countries!</div>
 		<div class="line"></div>
@@ -80,12 +80,12 @@
 <section class="continent mb-30">
 	<div id="map-continents">
 		<ul class="continents">
-			<li class="c1"><a href="#AF" rel="nofollow">Africa</a><b class="badge badge-info"><%= continentCounts.AF %></b></li>
-			<li class="c2"><a href="#AS" rel="nofollow">Asia</a><b class="badge badge-info"><%= continentCounts.AS %></b></li>
-			<li class="c3"><a href="#OC" rel="nofollow">Australia</a><b class="badge badge-info"><%= continentCounts.OC %></b></li>
-			<li class="c4"><a href="#EU" rel="nofollow">Europe</a><b class="badge badge-info"><%= continentCounts.EU %></b></li>
-			<li class="c5"><a href="#NA" rel="nofollow">North America</a><b class="badge badge-info"><%= continentCounts.NA %></b></li>
-			<li class="c6"><a href="#SA" rel="nofollow">South America</a><b class="badge badge-info"><%= continentCounts.SA %></b></li>
+			<li class="c1"><a href="#AF" rel="nofollow">Africa (<%= continentCounts.AF %>)</a></li>
+			<li class="c2"><a href="#AS" rel="nofollow">Asia (<%= continentCounts.AS %>)</a></li>
+			<li class="c3"><a href="#OC" rel="nofollow">Australia (<%= continentCounts.OC %>)</a></li>
+			<li class="c4"><a href="#EU" rel="nofollow">Europe (<%= continentCounts.EU %>)</a></li>
+			<li class="c5"><a href="#NA" rel="nofollow">North America (<%= continentCounts.NA %>)</a></li>
+			<li class="c6"><a href="#SA" rel="nofollow">South America (<%= continentCounts.SA %>)</a></li>
 		</ul>
 	</div>
 	<div class="row country-list justify-content-center" id="country-list">
@@ -287,7 +287,8 @@
 			var rLink = e.children("A").eq(0).attr("href"),
 				rText = e.children("A").eq(0).text(),
 				rClass = e.attr("class").split(" ")[0],
-				continentCode = continentCodeMap[rText];
+
+			continentCode = rLink.replace("#", "");
 
 			$.ajax({
 				type: "POST",
@@ -316,42 +317,13 @@
 			});
 		};
 
-		var numberTag = "B",
-			setNumbers = function(region){
-				var getLink = region.getElementsByTagName("A")[0],
-					getNumber = region.getElementsByTagName(numberTag)[0],
-					leftPosition = $(getLink).position().left,
-					topPosition = $(getLink).position().top + 18,
-					numberMarginTop = Math.floor($(getNumber).outerHeight() / -2),
-					numberMarginLeft = Math.floor($(getNumber).outerWidth() / -2),
-					setPosition = {
-						"left": leftPosition + "px",
-						"marginLeft": numberMarginLeft + "px",
-						"marginTop": numberMarginTop + "px",
-						"position": "absolute",
-						"top": topPosition + "px",
-						"zIndex": 88
-					};
-
-				$(getNumber).css(setPosition);
-			};
-
-		var onload = function(e) {
-			var getItems = e.find("LI");
-			for(var i = 0, region; region = getItems[i]; i++){
-				console.log(" > " + region);
-				setNumbers(region);
-			}
-		};
-
 		$("#map-continents").CSSMap({
 			"size": 850,
 			"tooltips": "visible",
 			"responsive": "auto",
 			"tapOnce": true,
 			"cities": true,
-			"onClick": onclick,
-			"onLoad": onload
+			"onClick": onclick
 		});
 
 		var continentCode = $("#continent-holder").val();
