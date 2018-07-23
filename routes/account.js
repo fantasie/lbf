@@ -4,7 +4,7 @@ var express = require('express'),
 	serviceConfig = require('./../config/serviceConfig'),
 	responseHelper = require('../helper/responseHelper'),
 	commonUtil = require('./../utils/commonUtil'),
-	bookshelfService = require('./../helper/bookshelfService'),
+	bookshelfService = require('./../dao/bookshelfService'),
 	async = require('async');
 
 var logger = require('log4js').getLogger('account/diary.js');

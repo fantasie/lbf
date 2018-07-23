@@ -37,7 +37,6 @@ exports.getRandomCode = function(data, callback) {
 			where = where + " and id != " + data.codeId;
 		}
 		var sql = 'select * from code ' + where + ' order by rand() limit 1';
-		logger.debug(sql);
 		connection.query(sql, function (err, result) {
 			if (err) {
 				logger.error("can not execute mysql query: " + sql + ", " + err);
@@ -47,6 +46,46 @@ exports.getRandomCode = function(data, callback) {
 
 			connection.release();
 			return callback(null, result[0]);
+		});
+	});
+};
+
+exports.getRandomCodeList = function(data, callback) {
+	pool.getConnection(function (err, connection) {
+		if (err) {
+			logger.error("can not get mysql connection.");
+			connection.release();
+			return callback(err);
+		}
+
+		var where = " where code.user_id != '" + data.userId + "'";
+		if (data.countryCode && data.countryCode != "ALL") {
+			where = where + " and code.country_code = '" + data.countryCode + "'"
+		}
+
+		if (data.continent) {
+			where = where + " and code.continent = '" + data.continent + "'"
+		}
+
+		if (data.lastCodeId && data.lastCodeId > 0) {
+			where = where + " and code.id < " + data.lastCodeId;
+		}
+
+		var sql = "select code.*, a1.type as liked, a2.type as disliked from code "
+				+ " left join `action` as a1 on a1.user_id='" + data.userId + "' and code.user_id = a1.other_user_id and code.id = a1.code_id and a1.type = 'LIKE'"
+				+ " left join `action` as a2 on a2.user_id='" + data.userId + "' and code.user_id = a2.other_user_id and code.id = a2.code_id and a2.type = 'DISLIKE'"
+				+ where
+				+ " order by code.id desc limit " + data.count;
+		logger.debug(sql);
+		connection.query(sql, function (err, result) {
+			if (err) {
+				logger.error("can not execute mysql query: " + sql + ", " + err);
+				connection.release();
+				return callback(err);
+			}
+
+			connection.release();
+			return callback(null, result);
 		});
 	});
 };

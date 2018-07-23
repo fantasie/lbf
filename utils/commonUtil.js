@@ -1,7 +1,7 @@
 var moment = require('moment'),
     fs = require('fs'),
     path = require('path'),
-    bookshelfService = require('./../helper/bookshelfService');
+    bookshelfService = require('./../dao/bookshelfService');
 
 var logger = require('log4js').getLogger('utils/commonUtil.js');
 

@@ -2,7 +2,7 @@ var express = require('express'),
 	router = express.Router(),
 	passport = require('passport'),
 	responseHelper = require('../helper/responseHelper'),
-	bookshelfService = require('./../helper/bookshelfService'),
+	bookshelfService = require('./../dao/bookshelfService'),
 	serviceConfig = require('./../config/serviceConfig'),
 	commonUtil = require('./../utils/commonUtil');
 

@@ -43,7 +43,7 @@
     "should": "*",
     "sqlite3": "^4.0.2",
     "tesseract.js": "^1.0.10",
-    "underscore": "1.*",
+    "underscore": "^1.9.1",
     "when": "^3.7.8"
   }
 }

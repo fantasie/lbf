@@ -1,10 +1,11 @@
 var express = require('express'),
 	router = express.Router(),
 	responseHelper = require('../helper/responseHelper'),
-	bookshelfService = require('./../helper/bookshelfService'),
-	mysqlService = require('./../helper/mysqlService'),
+	bookshelfService = require('./../dao/bookshelfService'),
+	mysqlService = require('./../dao/mysqlService'),
 	serviceConfig = require('./../config/serviceConfig'),
 	async = require('async'),
+	_ = require('underscore')._,
 	commonUtil = require('./../utils/commonUtil');
 
 // var ocr = require('./../utils/ocr');
@@ -638,6 +639,49 @@ var getContinentCountsMap = function(callback) {
 	});
 };
 
+router.get('/search2', function(req, res){
+	var result = responseHelper.getDefaultResult(req);
+
+	var continent = req.query.continent;
+	if (!continent) {
+		result.continent = "";
+
+		getContinentCountsMap(function(err, data){
+			if (err || !data) {
+				result.errorType = "request";
+				result.errorMessage = "Invalid request parameter.";
+				return res.render('search2', result);
+			}
+
+			result.continentCounts = data;
+			return res.render('search2', result);
+		});
+	} else {
+		async.parallel({
+			continentCounts: getContinentCountsMap,
+			countriesByContinent: function (callback) {
+				mysqlService.getCountriesByContinent(continent, callback);
+			}
+		}, function (err, results) {
+			if (err) {
+				result.errorType = "request";
+				result.errorMessage = "Invalid request parameter.";
+				return res.render('search2', result);
+			}
+
+			var data = results.countriesByContinent;
+			if (!data) {
+				data = [];
+			}
+			data.unshift({country_code: "ALL", country_name: "ALL"});
+			result.countries = data;
+			result.continent = continent;
+			result.continentCounts = results.continentCounts;
+			return res.render('search2', result);
+		});
+	}
+});
+
 router.get('/search', function(req, res){
 	var result = responseHelper.getDefaultResult(req);
 
@@ -680,5 +724,81 @@ router.get('/search', function(req, res){
 		});
 	}
 });
+
+router.post('/search/country/list', responseHelper.checkLoginWithResult, function(req, res){
+	var lastCodeId = req.body.last_code_id;
+	if (lastCodeId && lastCodeId < 0) {
+		var result = responseHelper.getDefaultResult(req);
+		result.errorType = "empty";
+		result.errorMessage = "No more data.";
+		return res.json(result);
+	}
+
+	var userId = req.user.user_id,
+		size = 10;
+	async.waterfall([
+		function(callback) {
+			bookshelfService.getCodes(userId, function(err, data){
+				if (!data || data.length == 0) {
+					var result = responseHelper.getDefaultResult(req);
+					result.errorType = "register";
+					result.errorMessage = "First, register your code!";
+					return res.json(result);
+				}
+
+				callback(err, null);
+			});
+		},
+		function(data, callback) {
+			mysqlService.getRandomCodeList({
+				userId: userId,
+				countryCode: req.body.country_code,
+				continent: req.body.continent,
+				count: size,
+				lastCodeId: lastCodeId
+			}, callback);
+		},
+	], function (err, data) {
+		var result = responseHelper.getDefaultResult(req);
+		result.reqCountryCode = req.body.country_code;
+		result.reqContinent = req.body.continent;
+
+		if (err) {
+			logger.warn("failed to increase view: userId: " + req.user.user_id);
+			result.errorType = "request";
+			result.errorMessage = "Invalid request parameter.";
+			return res.json(result);
+		}
+
+		var codes = [];
+		data.forEach(function(o) {
+			codes.push({
+				id: o.id,
+				like: o.like,
+				trainer_name: o.trainer_name,
+				trainer_code: formatizeTrainerCode(o.trainer_code),
+				country_code: o.country_code,
+				country_name: commonUtil.getCountry(o.country_code).countryName,
+				user_image: (o.user_image) ? o.user_image : serviceConfig.defaultUserImage,
+				comment: o.comment,
+				liked: o.liked,
+				disliked: o.disliked
+			});
+		});
+
+		// codes = _.shuffle(codes);
+		if (codes.length < size) {
+			lastCodeId = -1;
+		} else {
+			var last = _.last(codes);
+			lastCodeId = last ? last.id : lastCodeId;
+		}
+
+		result.lastCodeId = lastCodeId;
+		result.codes = codes;
+		return res.json(result);
+	});
+});
+
 
 module.exports = router;

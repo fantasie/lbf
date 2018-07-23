@@ -1,5 +1,5 @@
 var bcrypt = require('bcryptjs'),
-	models = require('./../dao/models'),
+	models = require('./models'),
 	serviceConfig = require('./../config/serviceConfig');
 
 var logger = require('log4js').getLogger('helper/bookshelfService.js');

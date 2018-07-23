@@ -1510,11 +1510,16 @@ a, a:hover {
 ul.continents a {
   padding: 2px 5px; }
 
+section h2 {
+  padding-bottom: 10px; }
+section .header-text {
+  text-align: center; }
+
 .section-gap {
-  padding: 80px 0; }
+  padding: 80px 10px; }
 
 .section-gap-sm {
-  padding: 30px 0; }
+  padding: 30px 10px; }
 
 .section-title {
   padding-bottom: 20px; }
@@ -1742,67 +1747,53 @@ ul.continents a {
   .lnr-hover .lnr {
     font-size: 35px; }
 
-.continent {
-  padding-right: 0px;
-  padding-left: 0px; }
-  .continent h2 {
-    padding-bottom: 10px; }
-  .continent .header-text {
-    text-align: center; }
-  .continent a {
-    color: #fff; }
-  .continent .country-list {
-    margin: auto;
-    padding: 0 10px;
-    width: 95%; }
-    @media (min-width: 460px) {
-      .continent .country-list {
-        width: 400px; } }
-    @media (min-width: 700px) {
-      .continent .country-list {
-        width: 650px; } }
-    .continent .country-list button.country {
-      outline: none;
-      cursor: pointer;
-      border-radius: 4px;
-      line-height: 20px;
-      margin: 5px 5px;
-      border: 1px solid #999;
-      font-size: .8em;
-      text-align: center;
-      text-decoration: none;
-      font-size: .9em;
-      letter-spacing: 0;
-      color: #555; }
-    .continent .country-list .selected {
-      font-weight: 500;
-      background-color: #fff; }
-    .continent .country-list .unselected {
-      font-weight: 300;
-      background-color: #fff;
-      color: #777; }
-    .continent .country-list .flag-img {
-      width: 20px; }
-      .continent .country-list .flag-img img {
-        width: 20px; }
-
-.register {
-  padding-right: 10px;
-  padding-left: 10px; }
-  .register .feedback {
-    color: #f7427f;
-    margin-top: 3px;
-    margin-left: 10px;
+.continent a {
+  color: #fff; }
+.continent .country-list {
+  margin: auto;
+  padding: 0 10px;
+  width: 95%; }
+  @media (min-width: 460px) {
+    .continent .country-list {
+      width: 400px; } }
+  @media (min-width: 700px) {
+    .continent .country-list {
+      width: 650px; } }
+  .continent .country-list button.country {
+    outline: none;
+    cursor: pointer;
+    border-radius: 4px;
+    line-height: 20px;
+    margin: 5px 5px;
+    border: 1px solid #999;
+    font-size: .8em;
+    text-align: center;
+    text-decoration: none;
+    font-size: .9em;
     letter-spacing: 0;
+    color: #555; }
+  .continent .country-list .selected {
+    font-weight: 500;
+    background-color: #fff; }
+  .continent .country-list .unselected {
     font-weight: 300;
-    display: none; }
-  .register h2 {
-    padding-bottom: 10px; }
-  .register .header-text {
-    text-align: center; }
-  .register .input h4 {
-    padding-top: 20px;
-    padding-bottom: 8px; }
+    background-color: #fff;
+    color: #777; }
+  .continent .country-list .flag-img {
+    width: 20px; }
+    .continent .country-list .flag-img img {
+      width: 20px; }
+
+.register .feedback {
+  color: #f7427f;
+  margin-top: 3px;
+  margin-left: 10px;
+  letter-spacing: 0;
+  font-weight: 300;
+  display: none; }
+.register .input h4 {
+  padding-top: 20px;
+  padding-bottom: 8px; }
 
 .user-icon span {
   color: #000;
@@ -1860,23 +1851,8 @@ ul.continents a {
   width: 100%;
   margin: 10px 0; }
 
-.my-code-view {
-  padding-right: 10px;
-  padding-left: 10px; }
-  .my-code-view h2 {
-    padding-bottom: 10px; }
-  .my-code-view .header-text {
-    text-align: center; }
-  .my-code-view .card {
-    margin-bottom: 20px; }
-
-.code-view {
-  padding-right: 10px;
-  padding-left: 10px; }
-  .code-view h2 {
-    padding-bottom: 10px; }
-  .code-view .header-text {
-    text-align: center; }
+.codes-view .card {
+  margin-bottom: 20px; }
 
 .card {
   margin: auto;
@@ -1929,5 +1905,16 @@ ul.continents a {
   .card .controls a {
     color: #777777;
     padding: 0; }
+
+a#top {
+  position: fixed;
+  right: 35px;
+  bottom: 35px;
+  display: none;
+  z-index: 999;
+  color: #222; }
+  a#top span {
+    font-size: 2.5em;
+    font-weight: 500; }
 
 /*# sourceMappingURL=main.css.map */

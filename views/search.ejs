@@ -10,48 +10,49 @@
 </script>
 
 <script type="text/template" id="tpl_card">
+	{% rc.codes.forEach(function(code){ %}
 	<div class="card">
 		<div class="row">
 			<div class="info">
 				<div class="label">Trainer Name</div>
-				<div class="text">{%= rc.code.trainer_name %}</div>
+				<div class="text">{%= code.trainer_name %}</div>
 
 				<div class="label mt-10">Country</div>
-				<div class="text"><span class="flag-mini"><img src='/img/flag/{%= rc.code.country_code %}.png' title='{%= rc.code.country_name %}'></span> {%= rc.code.country_name %}</div>
+				<div class="text"><span class="flag-mini"><img src='/img/flag/{%= code.country_code %}.png' title='{%= code.country_name %}'></span> {%= code.country_name %}</div>
 			</div>
 
-			<div class="image"><img src="{%= rc.code.user_image %}"></div>
+			<div class="image"><img src="{%= code.user_image %}"></div>
 		</div>
 
 		<div class="row label  mt-10">Trainer Code</div>
-		<div id="trainer-code" class="row trainer-code">{%= rc.code.trainer_code %}</div>
+		<div id="trainer-code-{%= code.id %}" class="row trainer-code">{%= code.trainer_code %}</div>
 
-		{% if (rc.code.comment) { %}
+		{% if (code.comment) { %}
 		<div class="line2"></div>
-		<div class="row comment">{%= rc.code.comment %}</div>
+		<div class="row comment">{%= code.comment %}</div>
 		<div class="line2"></div>
 		{% } %}
 
 		<div class="row justify-content-center mt-10">
-			<button class="tt copy-btn primary-btn2 text-uppercase" data-clipboard-target="#trainer-code" data-toggle="tooltip">Copy this trainer code</button>
+			<button class="tt copy-btn primary-btn2 text-uppercase" data-clipboard-target="#trainer-code-{%= code.id %}" data-toggle="tooltip">Copy this trainer code</button>
 		</div>
 
 		<div class="row comment justify-content-center mt-10">
-			<button class="primary-btn2 text-uppercase mr-15 like-btn" data-code_id="{%= rc.code.id %}">LIKE<span class="lnr lnr-thumbs-up"></span></button>
-			<button class="primary-btn2 text-uppercase dislike-btn" data-code_id="{%= rc.code.id %}">DISLIKE<span class="lnr lnr-thumbs-down"></span></button>
+			<button class="primary-btn2 text-uppercase mr-15 like-btn {% if (code.liked) { %}primary-btn2-selected{% } %}" data-code_id="{%= code.id %}">LIKE<span class="lnr lnr-thumbs-up"></span></button>
+			<button class="primary-btn2 text-uppercase dislike-btn {% if (code.disliked) { %}primary-btn2-selected{% } %}" data-code_id="{%= code.id %}">DISLIKE<span class="lnr lnr-thumbs-down"></span></button>
 		</div>
 
 		<div class="line"></div>
 
 		<div class="row controls">
 			<div class="col-4 like">
-				<a href="#"><span class="lnr lnr-thumbs-up"></span><span class="like-val">{%= rc.code.like %}</span></a>
+				<a href="#"><span class="lnr lnr-thumbs-up"></span><span class="like-val">{%= code.like %}</span></a>
 			</div>
-			<div class="another col-8" data-country_code="{%= rc.reqCountryCode %}" data-continent="{%= rc.reqContinent %}" data-code_id="{%= rc.code.id %}">
-				<a href="#">Find another trainer <span class="lnr lnr-sync"></span></a>
+			<div class="col-8" data-country_code="{%= rc.reqCountryCode %}" data-continent="{%= rc.reqContinent %}" data-code_id="{%= code.id %}">
 			</div>
 		</div>
 	</div>
+	{% }) %}
 </script>
 
 <script type="text/template" id="tpl_card-error">
@@ -63,8 +64,8 @@
 	</div>
 </script>
 
-<section class="mt-30 code-view">
-		<div id="card-wrapper" class="container">
+<section class="section-gap-sm">
+		<div class="container">
 			<div class="row d-flex justify-content-center session-title">
 				<div class="col-md-8 header-text">
 					<div class="lnr-hover"><span class="lnr lnr-rocket"></span></div>
@@ -77,7 +78,7 @@
 			</div>
 		</div>
 </section>
-<section class="continent mb-30">
+<section class="continent">
 	<div id="map-continents">
 		<ul class="continents">
 			<li class="c1"><a href="#AF" rel="nofollow">Africa <i><%= continentCounts.AF %></i></a></li>
@@ -101,34 +102,53 @@
 	<input id="continent-holder" type="hidden" value="<%= continent%>">
 </section>
 
+<section class="section-gap-sm">
+	<div id="card-wrapper" class="container codes-view">
+	</div>
+</section>
+
+<div class="row justify-content-center pb-50">
+	<a href="#" rel="nofollow"><button id="more-btn" class="primary-btn text-uppercase" style="display: none;" data-continent="<%= continent%>">Show more trainers<span class="lnr lnr-pointer-up"></span></button></a>
+</div>
+
+<a id="top" href="#" rel="nofollow"><span class="lnr lnr-chevron-up-circle"></span></a>
+
 <% include ./foot %>
 
 <script type="text/javascript">
 	$(document).ready(function(){
 		var countryListEl = $("#country-list"),
-			cardEl= $("#card-wrapper"),
-			lastSelected;
+			cardEl = $("#card-wrapper"),
+			moreBtnEl = $("#more-btn"),
+			lastSelectedCountry,
+			lastCodeId;
 
-		var getCodeEvent = function(e) {
+		var resetSelectedAndGetCodeEvent = function(e) {
 			e.preventDefault();
 
-			var _copyBtnEl = $('.copy-btn'),
-				_likeBtnEl = $(".like-btn"),
-				_dislikeBtnEl = $(".dislike-btn");
-			_copyBtnEl && _copyBtnEl.tooltip('hide');
-			_likeBtnEl && _likeBtnEl.tooltip('hide');
-			_dislikeBtnEl && _dislikeBtnEl.tooltip('hide');
+			if (lastSelectedCountry) {
+				lastSelectedCountry.removeClass('selected');
+				lastSelectedCountry.addClass('unselected');
+			}
+
+			lastSelectedCountry = $(e.currentTarget);
+			lastSelectedCountry.removeClass('unselected');
+			lastSelectedCountry.addClass('selected');
+
+			lastCodeId = undefined;
 
 			var countryCode = $(e.currentTarget).data('country_code'),
-				continent = $(e.currentTarget).data('continent'),
-				codeId = $(e.currentTarget).data('code_id');
+				continent = $(e.currentTarget).data('continent');
+
+			moreBtnEl.hide();
+
 			$.ajax({
 				type: "POST",
-				url: "/code/search/country",
+				url: "/code/search/country/list",
 				data: {
 					continent: continent,
 					country_code: countryCode,
-					code_id: codeId,
+					last_code_id: lastCodeId,
 					path: "/code/search/"
 				},
 				success: function (result) {
@@ -138,148 +158,192 @@
 					} else if (result.errorType == "register") {
 						alert(result.errorMessage);
 						return window.location.href = "/code/register";
+					} else if (result.errorType == "empty") {
+						return alert(result.errorMessage);
 					} else if (result.errorType) {
-						alert('[ERROR] ' + result.errorMessage);
-						return;
+						return alert('[ERROR] ' + result.errorMessage);
 					}
 
-					if (!result.code) {
+					if (!result.codes || result.codes.length == 0) {
 						cardEl.html(_.template($('#tpl_card-error').html())());
 						return;
 					}
 
 					cardEl.html(_.template($('#tpl_card').html())(result));
-					// add event listener
-					new ClipboardJS('.copy-btn');
-					var copyBtnEl = $('.copy-btn'),
-						likeBtnEl = $(".like-btn"),
-						dislikeBtnEl = $(".dislike-btn");
 
-					copyBtnEl.tooltip({
-						trigger: 'manual',
-						placement: 'top'
-					});
-
-					$('.copy-btn').click(function(e) {
-						setTooltip(copyBtnEl, 'Copied!');
-						hideTooltip(copyBtnEl);
-					});
-
-					$('.like-btn').tooltip({
-						trigger: 'manual',
-						placement: 'bottom'
-					});
-
-					$('.dislike-btn').tooltip({
-						trigger: 'manual',
-						placement: 'bottom'
-					});
-
-					if (result.code.liked) {
-						likeBtnEl.addClass('primary-btn2-selected');
+					lastCodeId = result.lastCodeId;
+					if (lastCodeId > 0) {
+						moreBtnEl.data('continent', continent);
+						moreBtnEl.data('country_code', countryCode);
+						moreBtnEl.show();
 					}
-
-					if (result.code.disliked) {
-						dislikeBtnEl.addClass('primary-btn2-selected');
-					}
-
-					likeBtnEl.click(function(e) {
-						e.preventDefault();
-						var codeId= $(e.currentTarget).data('code_id');
-						$.ajax({
-							type: "POST",
-							url: "/code/like",
-							data: {
-								code_id: codeId,
-								path: "/code/search/"
-							},
-							success: function(result) {
-								if (result.errorType == "login") {
-									alert(result.errorMessage);
-									return window.location.href = result.siteConfig.loginUrl;
-								} else if (result.errorType) {
-									setTooltip(likeBtnEl, result.errorMessage);
-									hideTooltip(likeBtnEl);
-									return;
-								}
-
-								var likeEl = $(".like-val"),
-									msg = (result.isCancel) ? "Canceled!" : "Liked!",
-									increments = (result.isCancel) ? -1 : 1;
-
-								if (result.isCancel) {
-									likeBtnEl.removeClass('primary-btn2-selected');
-								} else {
-									likeBtnEl.addClass('primary-btn2-selected');
-								}
-
-								likeEl.text(Number(likeEl.text()) + increments);
-								setTooltip(likeBtnEl, msg);
-								hideTooltip(likeBtnEl);
-							},
-							error: function(req, status, e) {
-								alert('[ERROR] ' + e);
-							}
-						});
-					});
-
-					dislikeBtnEl.click(function(e) {
-						e.preventDefault();
-						var codeId= $(e.currentTarget).data('code_id');
-						$.ajax({
-							type: "POST",
-							url: "/code/dislike",
-							data: {
-								code_id: codeId,
-								path: "/code/search/"
-							},
-							success: function(result) {
-								if (result.errorType == "login") {
-									alert(result.errorMessage);
-									return window.location.href = result.siteConfig.loginUrl;
-								} else if (result.errorType) {
-									setTooltip(dislikeBtnEl, result.errorMessage);
-									hideTooltip(dislikeBtnEl);
-									return;
-								}
-
-								var msg = (result.isCancel) ? "Canceled!" : "Disliked!";
-
-								if (result.isCancel) {
-									dislikeBtnEl.removeClass('primary-btn2-selected');
-								} else {
-									dislikeBtnEl.addClass('primary-btn2-selected');
-								}
-
-								setTooltip(dislikeBtnEl, msg);
-								hideTooltip(dislikeBtnEl);
-							},
-							error: function(req, status, e) {
-								alert('[ERROR] ' + e);
-							}
-						});
-					});
-
-					$(".another").click(getCodeEvent);
-					// event listener end
 				},
 				error: function (req, status, e) {
 					alert('[ERROR] ' + e);
 				}
 			});
 		};
-		var resetSelectedAndGetCodeEvent = function(e) {
-			if (lastSelected) {
-				lastSelected.removeClass('selected');
-				lastSelected.addClass('unselected');
-			}
 
-			lastSelected = $(e.currentTarget);
-			lastSelected.removeClass('unselected');
-			lastSelected.addClass('selected');
+		new ClipboardJS('.copy-btn');
+		$('body').on('click', '.copy-btn', function(e) {
+			e.preventDefault();
+			var btnEl = $(e.currentTarget);
 
-			getCodeEvent(e);
-		};
+			btnEl.tooltip({
+				trigger: 'manual',
+				placement: 'top'
+			});
+
+			setTooltip(btnEl, 'Copied!');
+			hideTooltip(btnEl);
+		});
+
+		$('body').on('click', '.like-btn', function(e) {
+			e.preventDefault();
+			var btnEl = $(e.currentTarget),
+				codeId= btnEl.data('code_id');
+			$.ajax({
+				type: "POST",
+				url: "/code/like",
+				data: {
+					code_id: codeId,
+					path: "/code/search/"
+				},
+				success: function(result) {
+					if (result.errorType == "login") {
+						alert(result.errorMessage);
+						return window.location.href = result.siteConfig.loginUrl;
+					} else if (result.errorType) {
+						setTooltip(btnEl, result.errorMessage);
+						hideTooltip(btnEl);
+						return;
+					}
+
+					if (result.isCancel) {
+						btnEl.removeClass('primary-btn2-selected');
+					} else {
+						btnEl.addClass('primary-btn2-selected');
+					}
+
+					var valueEl = btnEl.parent().siblings(".controls").find(".like-val"),
+						msg = (result.isCancel) ? "Canceled" : "Liked!",
+						increments = (result.isCancel) ? -1 : 1;
+
+					btnEl.tooltip({
+						trigger: 'manual',
+						placement: 'bottom'
+					});
+
+					valueEl.text(Number(valueEl.text()) + increments);
+					setTooltip(btnEl, msg);
+					hideTooltip(btnEl);
+				},
+				error: function(req, status, e) {
+					alert('[ERROR] ' + e);
+				}
+			});
+		});
+
+		$('body').on('click', '.dislike-btn', function(e) {
+			e.preventDefault();
+			var btnEl = $(e.currentTarget),
+				codeId= btnEl.data('code_id');
+			$.ajax({
+				type: "POST",
+				url: "/code/dislike",
+				data: {
+					code_id: codeId,
+					path: "/code/search/"
+				},
+				success: function(result) {
+					if (result.errorType == "login") {
+						alert(result.errorMessage);
+						return window.location.href = result.siteConfig.loginUrl;
+					} else if (result.errorType) {
+						setTooltip(btnEl, result.errorMessage);
+						hideTooltip(btnEl);
+						return;
+					}
+
+					if (result.isCancel) {
+						btnEl.removeClass('primary-btn2-selected');
+					} else {
+						btnEl.addClass('primary-btn2-selected');
+					}
+
+					btnEl.tooltip({
+						trigger: 'manual',
+						placement: 'bottom'
+					});
+
+					var msg = (result.isCancel) ? "Canceled" : "Disliked!";
+					setTooltip(btnEl, msg);
+					hideTooltip(btnEl);
+				},
+				error: function(req, status, e) {
+					alert('[ERROR] ' + e);
+				}
+			});
+		});
+
+		$('body').on('click', '#more-btn', function(e) {
+			e.preventDefault();
+			var countryCode = $(e.currentTarget).data('country_code'),
+				continent = $(e.currentTarget).data('continent');
+
+			moreBtnEl.tooltip({
+				trigger: 'manual',
+				placement: 'bottom'
+			});
+
+			setTooltip(moreBtnEl, "Loading...");
+			hideTooltip(moreBtnEl);
+
+			$.ajax({
+				type: "POST",
+				url: "/code/search/country/list",
+				data: {
+					continent: continent,
+					country_code: countryCode,
+					last_code_id: lastCodeId,
+					path: "/code/search/"
+				},
+				success: function (result) {
+					moreBtnEl.tooltip('hide');
+
+					if (result.errorType == "login") {
+						alert(result.errorMessage);
+						return window.location.href = result.siteConfig.loginUrl;
+					} else if (result.errorType == "register") {
+						alert(result.errorMessage);
+						return window.location.href = "/code/register";
+					} else if (result.errorType == "empty") {
+						moreBtnEl.hide();
+						return alert(result.errorMessage);
+					} else if (result.errorType) {
+						return alert('[ERROR] ' + result.errorMessage);
+					}
+
+					if (result.lastCodeId == -1) {
+						moreBtnEl.hide();
+						lastCodeId = result.lastCodeId;
+					}
+
+					if (result.codes && result.codes.length > 0) {
+						var loaded = _.template($('#tpl_card').html())(result);
+						cardEl.html(cardEl.html() + loaded);
+
+						lastCodeId = result.lastCodeId;
+						moreBtnEl.data('continent', continent);
+						moreBtnEl.data('country_code', countryCode);
+					}
+				},
+				error: function (req, status, e) {
+					moreBtnEl.tooltip('hide');
+					alert('[ERROR] ' + e);
+				}
+			});
+		});
 
 		$('body').on('click', '.country', resetSelectedAndGetCodeEvent);
 
@@ -289,6 +353,7 @@
 				rClass = e.attr("class").split(" ")[0],
 
 			continentCode = rLink.replace("#", "");
+			moreBtnEl.hide();
 
 			$.ajax({
 				type: "POST",
@@ -309,7 +374,10 @@
 					if (result.countries) {
 						var newHtml = _.template($('#tpl_countryList').html())(result);
 						countryListEl.html(newHtml);
+
+						cardEl.html("");
 					}
+
 				},
 				error: function (req, status, e) {
 					alert('[ERROR] ' + e);
@@ -341,6 +409,20 @@
 			$("#map-continents").find('li.' + className).addClass('active-region');
 		};
 
+		$(window).scroll(function() {
+			if ($(this).scrollTop() > 500) {
+				$('#top').fadeIn();
+			} else {
+				$('#top').fadeOut();
+			}
+		});
+
+		$("#top").click(function() {
+			$('html, body').animate({
+				scrollTop : 0
+			}, 400);
+			return false;
+		});
 	});
 </script>
 

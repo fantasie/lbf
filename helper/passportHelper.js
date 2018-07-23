@@ -1,6 +1,6 @@
 var GoogleStrategy = require('passport-google-oauth20' ).Strategy,
     config = require('./../config/config'),
-    bookshelfService = require('./bookshelfService'),
+    bookshelfService = require('./../dao/bookshelfService'),
     logger = require('log4js').getLogger('helper/passportHelper.js');
 
 module.exports = function(passport) {

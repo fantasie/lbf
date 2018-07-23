@@ -8,13 +8,23 @@ ul.continents {
   }
 }
 
+section {
+  h2 {
+	padding-bottom: 10px;
+  }
+
+  .header-text {
+	text-align: center;
+  }
+}
 .section-gap {
-  padding: 80px 0;
+  padding: 80px 10px;
 }
 
 .section-gap-sm {
-  padding: 30px 0;
+  padding: 30px 10px;
 }
+
 
 .section-title {
   padding-bottom: 20px;
@@ -289,16 +299,6 @@ ul.continents {
 
 
 .continent {
-  padding-right: 0px;
-  padding-left: 0px;
-
-  h2 {
-	padding-bottom: 10px;
-  }
-  .header-text {
-	text-align: center;
-  }
-
   a {
 	color: #fff;
 
@@ -358,9 +358,6 @@ ul.continents {
 }
 
 .register {
-  padding-right: 10px;
-  padding-left: 10px;
-
   .feedback{
 	color: $primary-color;
 	margin-top: 3px;
@@ -368,14 +365,6 @@ ul.continents {
 	letter-spacing: 0;
 	font-weight: 300;
 	display: none;
-  }
-
-  h2 {
-	padding-bottom: 10px;
-  }
-
-  .header-text {
-	text-align: center;
   }
 
   .input {
@@ -452,33 +441,9 @@ ul.continents {
   margin: 10px 0;
 }
 
-.my-code-view {
-  padding-right: 10px;
-  padding-left: 10px;
-
-  h2 {
-	padding-bottom: 10px;
-  }
-
-  .header-text {
-	text-align: center;
-  }
-
+.codes-view {
   .card {
 	margin-bottom: 20px;
-  }
-}
-
-.code-view {
-  padding-right: 10px;
-  padding-left: 10px;
-
-  h2 {
-	padding-bottom: 10px;
-  }
-
-  .header-text {
-	text-align: center;
   }
 }
 
@@ -570,5 +535,19 @@ ul.continents {
 	  color: $text-color;
 	  padding: 0;
 	}
+  }
+}
+
+a#top
+{
+  position: fixed;
+  right: 35px;
+  bottom: 35px;
+  display: none;
+  z-index: 999;
+  color: #222;
+  span {
+	font-size: 2.5em;
+	font-weight: 500;
   }
 }
