@@ -786,13 +786,14 @@ router.post('/search/country/list', responseHelper.checkLoginWithResult, functio
 			});
 		});
 
-		// codes = _.shuffle(codes);
 		if (codes.length < size) {
 			lastCodeId = -1;
 		} else {
 			var last = _.last(codes);
 			lastCodeId = last ? last.id : lastCodeId;
 		}
+
+		codes = _.shuffle(codes);
 
 		result.lastCodeId = lastCodeId;
 		result.codes = codes;
