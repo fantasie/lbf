@@ -12,6 +12,10 @@ router.get('/', function(req, res) {
 	res.redirect('/home');
 });
 
+router.get('/googlea60ae9f984f56832.html', function(req, res) {
+	res.render('google');
+});
+
 router.get('/home', function(req, res) {
 	var result = responseHelper.getDefaultResult(req);
 
