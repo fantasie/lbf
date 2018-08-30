@@ -1749,7 +1749,7 @@ section .header-text {
   color: #fff; }
 .continent .country-list {
   margin: auto;
-  padding: 0 10px;
+  padding: 0 8px;
   width: 95%; }
   @media (min-width: 460px) {
     .continent .country-list {
@@ -1761,13 +1761,12 @@ section .header-text {
     outline: none;
     cursor: pointer;
     border-radius: 4px;
-    line-height: 20px;
-    margin: 5px 5px;
+    line-height: 18px;
+    margin: 4px 4px;
     border: 1px solid #999;
-    font-size: .8em;
+    font-size: 11px;
     text-align: center;
     text-decoration: none;
-    font-size: .9em;
     letter-spacing: 0;
     color: #555; }
   .continent .country-list .selected {
