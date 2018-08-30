@@ -36,4 +36,9 @@ router.get('/about', function(req,res){
 	res.render('about', result);
 });
 
+router.get('/notice', function(req,res){
+	var result = responseHelper.getDefaultResult(req);
+	res.render('notice', result);
+});
+
 module.exports = router;

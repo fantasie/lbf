@@ -1425,7 +1425,7 @@ body {
   background-color: #fff;
   padding-bottom: 20px;
   width: 100% !important;
-  box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3); }
+  border-bottom: 1px dotted rgba(158, 158, 158, 0.7); }
 
 .header-decoration {
   height: 5px;
@@ -1858,6 +1858,29 @@ section .header-text {
   padding-top: 10px;
   font-size: 6pt;
   text-transform: uppercase; }
+
+.notice {
+  background-color: #fff;
+  height: 30px;
+  font-size: 11px;
+  font-weight: 300;
+  color: #000;
+  padding: 6px 0 5px 0; }
+  .notice a, .notice a:hover {
+    color: #000; }
+  .notice div {
+    cursor: pointer; }
+  .notice span {
+    margin-right: 5px;
+    color: #f7427f; }
+
+.notice-content b {
+  color: #000; }
+.notice-content .subject {
+  font-size: 18px;
+  font-weight: 400;
+  color: #000;
+  padding-bottom: 7px; }
 
 .line {
   border: 1px dotted #fbcdd2;

@@ -456,6 +456,40 @@ section {
   text-transform: uppercase;
 }
 
+.notice {
+  background-color: #fff;
+  height: 30px;
+  font-size: 11px;
+  font-weight: 300;
+  color: #000;
+  padding: 6px 0 5px 0;
+
+  a, a:hover {
+	color: #000;
+  }
+
+  div {
+	cursor: pointer;
+  }
+
+  span {
+	margin-right: 5px;
+	color: $primary-color;
+  }
+}
+
+.notice-content {
+  b {
+	color: #000;
+  }
+  .subject {
+	font-size: 18px;
+	font-weight: 400;
+	color: #000;
+	padding-bottom: 7px;
+  }
+}
+
 .line {
   border: 1px dotted #fbcdd2;
   height: 1px;
