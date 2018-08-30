@@ -95,7 +95,7 @@ $(document).ready(function(){
     findInputEl.keyup(function(e) {
         if (e.keyCode == 13 && findInputEl.val() != "") {
             var trainerName = findInputEl.val().replace(/[^a-zA-Z0-9]/g, '');
-            return window.location.href = "/code/find/" + trainerName;
+            return window.location.href = "/code/search/" + trainerName;
         };
     });
 

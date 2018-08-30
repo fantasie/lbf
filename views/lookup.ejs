@@ -148,12 +148,12 @@
 
 			$.ajax({
 				type: "POST",
-				url: "/code/search/country/list",
+				url: "/code/lookup/country/list",
 				data: {
 					continent: continent,
 					country_code: countryCode,
 					last_code_id: lastCodeId,
-					path: "/code/search/"
+					path: "/code/lookup/"
 				},
 				success: function (result) {
 					if (result.errorType == "login") {
@@ -211,7 +211,7 @@
 				url: "/code/like",
 				data: {
 					code_id: codeId,
-					path: "/code/search/"
+					path: "/code/lookup/"
 				},
 				success: function(result) {
 					if (result.errorType == "login") {
@@ -257,7 +257,7 @@
 				url: "/code/dislike",
 				data: {
 					code_id: codeId,
-					path: "/code/search/"
+					path: "/code/lookup/"
 				},
 				success: function(result) {
 					if (result.errorType == "login") {
@@ -305,12 +305,12 @@
 
 			$.ajax({
 				type: "POST",
-				url: "/code/search/country/list",
+				url: "/code/lookup/country/list",
 				data: {
 					continent: continent,
 					country_code: countryCode,
 					last_code_id: lastCodeId,
-					path: "/code/search/"
+					path: "/code/lookup/"
 				},
 				success: function (result) {
 					moreBtnEl.tooltip('hide');
@@ -361,10 +361,10 @@
 
 			$.ajax({
 				type: "POST",
-				url: "/code/search/continent",
+				url: "/code/lookup/continent",
 				data: {
 					continent: continentCode,
-					path: "/code/search/"
+					path: "/code/lookup/"
 				},
 				success: function (result) {
 					if (result.errorType == "login") {

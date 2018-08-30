@@ -227,7 +227,7 @@ router.post('/update', responseHelper.checkLoginWithResult, function(req, res){
 	};
 });
 
-router.get('/view', responseHelper.checkLoginWithRedirect, function(req, res){
+router.get('/random', responseHelper.checkLoginWithRedirect, function(req, res){
 	async.waterfall([
 		function(callback) {
 			mysqlService.getRandomCode({
@@ -367,46 +367,6 @@ function formatizeTrainerCode(code) {
 
 	return chunk.join(" ");
 };
-
-// const multerConfig = {
-// 	storage: multer.diskStorage({
-// 		//Setup where the user's file will go
-// 		destination: function(req, file, next){
-// 			next(null, './public/img/photo-storage');
-// 		},
-//
-// 		//Then give the file a unique name
-// 		filename: function(req, file, next){
-// 			console.log(file);
-// 			const ext = file.mimetype.split('/')[1];
-// 			next(null, file.fieldname + '-' + Date.now() + '.'+ext);
-// 		}
-// 	}),
-//
-// 	fileFilter: function(req, file, next){
-// 		if(!file){
-// 			next();
-// 		}
-// 		const image = file.mimetype.startsWith('image/');
-// 		if(image){
-// 			console.log('photo uploaded');
-// 			next(null, true);
-// 		}else{
-// 			console.log("file not supported");
-//
-// 			//TODO:  A better message response to user on failure.
-// 			return next();
-// 		}
-// 	}
-// };
-//
-// router.get('/test',  multer(multerConfig).single('image'), function(req,res){
-// 	ocr.regognize(req.file, function() {
-// 		logger.info('Complete!');
-// 		res.render('register');
-// 	});
-//
-// });
 
 router.get('/my', responseHelper.checkLoginWithRedirect, function(req, res){
 	var userId = req.user.user_id;
@@ -565,7 +525,7 @@ router.post('/search/country', responseHelper.checkLoginWithResult, function(req
 	});
 });
 
-router.post('/search/continent', function(req, res){
+router.post('/lookup/continent', function(req, res){
 	var result = responseHelper.getDefaultResult(req),
 		continent = req.body.continent;
 
@@ -608,7 +568,7 @@ var getContinentCountsMap = function(callback) {
 	});
 };
 
-router.get('/search2', function(req, res){
+router.get('/lookup', function(req, res){
 	var result = responseHelper.getDefaultResult(req);
 
 	var continent = req.query.continent;
@@ -619,11 +579,11 @@ router.get('/search2', function(req, res){
 			if (err || !data) {
 				result.errorType = "request";
 				result.errorMessage = "Invalid request parameter.";
-				return res.render('search2', result);
+				return res.render('lookup', result);
 			}
 
 			result.continentCounts = data;
-			return res.render('search2', result);
+			return res.render('lookup', result);
 		});
 	} else {
 		async.parallel({
@@ -635,7 +595,7 @@ router.get('/search2', function(req, res){
 			if (err) {
 				result.errorType = "request";
 				result.errorMessage = "Invalid request parameter.";
-				return res.render('search2', result);
+				return res.render('lookup', result);
 			}
 
 			var data = results.countriesByContinent;
@@ -646,55 +606,12 @@ router.get('/search2', function(req, res){
 			result.countries = data;
 			result.continent = continent;
 			result.continentCounts = results.continentCounts;
-			return res.render('search2', result);
+			return res.render('lookup', result);
 		});
 	}
 });
 
-router.get('/search', function(req, res){
-	var result = responseHelper.getDefaultResult(req);
-
-	var continent = req.query.continent;
-	if (!continent) {
-		result.continent = "";
-
-		getContinentCountsMap(function(err, data){
-			if (err || !data) {
-				result.errorType = "request";
-				result.errorMessage = "Invalid request parameter.";
-				return res.render('search', result);
-			}
-
-			result.continentCounts = data;
-			return res.render('search', result);
-		});
-	} else {
-		async.parallel({
-			continentCounts: getContinentCountsMap,
-			countriesByContinent: function (callback) {
-				mysqlService.getCountriesByContinent(continent, callback);
-			}
-		}, function (err, results) {
-			if (err) {
-				result.errorType = "request";
-				result.errorMessage = "Invalid request parameter.";
-				return res.render('search', result);
-			}
-
-			var data = results.countriesByContinent;
-			if (!data) {
-				data = [];
-			}
-			data.unshift({country_code: "ALL", country_name: "ALL"});
-			result.countries = data;
-			result.continent = continent;
-			result.continentCounts = results.continentCounts;
-			return res.render('search', result);
-		});
-	}
-});
-
-router.post('/search/country/list', responseHelper.checkLoginWithResult, function(req, res){
+router.post('/lookup/country/list', responseHelper.checkLoginWithResult, function(req, res){
 	var lastCodeId = req.body.last_code_id;
 	if (lastCodeId && lastCodeId < 0) {
 		var result = responseHelper.getDefaultResult(req);
@@ -770,7 +687,7 @@ router.post('/search/country/list', responseHelper.checkLoginWithResult, functio
 	});
 });
 
-router.get('/find/:name', responseHelper.checkLoginWithRedirect, function(req, res){
+router.get('/search/:name', responseHelper.checkLoginWithRedirect, function(req, res){
 	var trainerName = req.params.name;
 
 	async.waterfall([
