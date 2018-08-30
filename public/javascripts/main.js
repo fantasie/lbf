@@ -79,6 +79,26 @@ $(document).ready(function(){
     $('.prev-trigger').click(function() {
         $(".active-banner-carousel").trigger('prev.owl.carousel');
     });
+
+    var findEl= $(".find-user"),
+        findInputEl = findEl.find('input');
+
+    $(".find-icon").click(function(e) {
+        findEl.toggleClass('hidden');
+    });
+
+    findInputEl.on("keyup", function(event) {
+        var trainerName = findInputEl.val().replace(/[^a-zA-Z0-9]/g, '');
+        findInputEl.val(trainerName);
+    });
+
+    findInputEl.keyup(function(e) {
+        if (e.keyCode == 13 && findInputEl.val() != "") {
+            var trainerName = findInputEl.val().replace(/[^a-zA-Z0-9]/g, '');
+            return window.location.href = "/code/find/" + trainerName;
+        };
+    });
+
  });
 
 

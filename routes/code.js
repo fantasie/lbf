@@ -266,37 +266,6 @@ router.get('/view', responseHelper.checkLoginWithRedirect, function(req, res){
 	});
 });
 
-router.get('/view/:id', function(req, res){
-	var id = req.params.id;
-	async.waterfall([
-		function(callback) {
-			bookshelfService.getCode(id, callback);
-		},
-		function(data, callback) {
-			if (!data) {
-				return callback("data not exists. ");
-			}
-
-			bookshelfService.adjustCode(data.id, 'view', 1, function() {
-				callback(null, data);
-			});
-		}
-	], function (err, data) {
-		var result = responseHelper.getDefaultResult(req);
-		if (err) {
-			result.errorType = "request";
-			result.errorMessage = "Invalid request parameter.";
-			return res.render('view', result);
-		}
-
-		result.code = data;
-		result.code.trainer_code = formatizeTrainerCode(result.code.trainer_code);
-		result.code.country_name = commonUtil.getCountry(result.code.country_code).countryName;
-		result.code.user_image = (result.code.user_image) ? result.code.user_image : serviceConfig.defaultUserImage;
-		return res.render('view', result);
-	});
-});
-
 router.post('/like', responseHelper.checkLoginWithResult, function(req, res) {
 	return addAction('LIKE', req, res);
 });
@@ -801,5 +770,36 @@ router.post('/search/country/list', responseHelper.checkLoginWithResult, functio
 	});
 });
 
+router.get('/find/:name', responseHelper.checkLoginWithRedirect, function(req, res){
+	var trainerName = req.params.name;
+
+	async.waterfall([
+		function(callback) {
+			bookshelfService.getCodeByTrainerName(trainerName, callback);
+		},
+		function(data, callback) {
+			if (!data) {
+				return callback("data not exists. ");
+			}
+
+			bookshelfService.adjustCode(data.id, 'view', 1, function() {
+				callback(null, data);
+			});
+		}
+	], function (err, data) {
+		var result = responseHelper.getDefaultResult(req);
+		if (err) {
+			result.errorType = "request";
+			result.errorMessage = "The trainer name \"" + trainerName + "\" does not exist.";
+			return res.render('view', result);
+		}
+
+		result.code = data;
+		result.code.trainer_code = formatizeTrainerCode(result.code.trainer_code);
+		result.code.country_name = commonUtil.getCountry(result.code.country_code).countryName;
+		result.code.user_image = (result.code.user_image) ? result.code.user_image : serviceConfig.defaultUserImage;
+		return res.render('view', result);
+	});
+});
 
 module.exports = router;

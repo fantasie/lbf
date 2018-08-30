@@ -1801,11 +1801,33 @@ section .header-text {
   margin-right: 17px; }
 
 .search-icon {
-  margin-right: 15px;
+  margin-right: 17px;
   margin-top: 2px; }
   .search-icon span {
     color: #000;
     font-size: 19px; }
+
+.find-icon {
+  margin-right: 15px;
+  cursor: pointer; }
+  .find-icon span {
+    color: #000;
+    font-size: 17px; }
+
+.hidden {
+  display: none; }
+
+.find-user {
+  width: 100%;
+  padding-top: 10px;
+  text-align: right; }
+  .find-user input {
+    width: 140px;
+    font-size: 12px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 1px solid #000; }
 
 .circle-img {
   width: 29px;

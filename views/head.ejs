@@ -68,8 +68,14 @@
 						</div>
 						<% } %>
 						<div class="search-icon"><a href="/code/search"><span class="lnr lnr-rocket"></span></a></div>
+						<% if (typeof user == 'object' && user) { %>
+						<div class="find-icon"><a><span class="lnr lnr-magnifier"></span></a></div>
+						<% } %>
 						<div class="menu-bar"><span class="lnr lnr-menu"></span></div>
 					</div>
+				</div>
+				<div class="find-user hidden">
+					<input type="text" name="trainer-name" class="" placeholder="Trainer Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Trainer Name'" maxlength="20">
 				</div>
 			</div>
 		</div>

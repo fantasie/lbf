@@ -7,23 +7,17 @@
 				<div class="lnr-hover"><span class="lnr lnr-rocket"></span></div>
 				<h2>Trainer Code</h2>
 				<p>
-					Add below as a friend in your Pokémon GO app.
+
 				</p>
 			</div>
 		</div>
 
 		<div class="card">
 			<% if (typeof errorType != 'undefined' && errorType) { %>
-			<h3>ERROR</h3>
+			<h3>NOT FOUND</h3>
 			<div class="line"></div>
 			<div><%= errorMessage %></div>
 			<div class="line"></div>
-
-			<!--<div class="row controls">-->
-				<!--<div class="another col-12">-->
-					<!--<a href="/code/search">Look another countries <span class="lnr lnr-location"></span></a>-->
-				<!--</div>-->
-			<!--</div>-->
 			<% } else { %>
 			<div class="row">
 				<div class="info">
@@ -63,20 +57,21 @@
 				<div class="col-4 like">
 					<a href="#"><span class="lnr lnr-thumbs-up"></span><span class="like-val"><%= code.like %></span></a>
 				</div>
-				<div class="another col-8">
-					<a href="/code/view">Find another trainer <span class="lnr lnr-sync"></span></a>
+				<div class="col-8">
+
 				</div>
 			</div>
 			<% } %>
 		</div>
-	</div>
 
-	<div class="row justify-content-center pt-20 pb-20">
-		<a href="/code/search"><button class="primary-btn text-uppercase">Look up more countries<span class="lnr lnr-arrow-right"></span></button></a>
+		<div class="row justify-content-center pt-40 pb-20">
+			<a href="/code/search"><button class="primary-btn text-uppercase">Look up other trainers<span class="lnr lnr-arrow-right"></span></button></a>
+		</div>
 	</div>
 </section>
 
 <% include ./foot %>
+
 <script>
 	new ClipboardJS('.copy-btn');
 

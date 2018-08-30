@@ -158,6 +158,22 @@ exports.getCode = function(id, callback) {
 	});
 };
 
+exports.getCodeByTrainerName = function(trainerName, callback) {
+	models.models.Code.forge({ trainer_name: trainerName })
+		.fetch()
+		.then(function (code) {
+			if (!code) {
+				return callback(null, null);
+			}
+
+			return callback(null, code.toJSON());
+		})
+		.catch(function (err) {
+			logger.error(err);
+			return callback(err, null);
+		});
+};
+
 exports.getMyCode = function(userId, id, callback) {
 	models.models.Code.forge({ id: id, user_id: userId })
 		.fetch()
