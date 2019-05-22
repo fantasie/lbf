@@ -1,0 +1,9 @@
+{
+	"uid": "lbf",
+	"max": 5,
+	"spinSleepTime": 1000,
+	"append": true,
+	"watch": true,
+	"script": "app.js",
+	"sourceDir": "/home/ec2-user/lbf"
+}
